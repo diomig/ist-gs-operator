@@ -1,4 +1,5 @@
-import paho.mqtt.client as mqtt
+import paho.mqtt.client as mqtt_client
+
 
 # Define the MQTT topics
 pub_topics = ["radio/freq", "radio/bw", "radio/br", "radio/chksum", "msg/cmd"]
@@ -30,42 +31,42 @@ def on_message(client, userdata, msg):
 
 
 # Initialize the MQTT client
-client = mqtt.Client()
+mqttC = mqtt_client.Client()
 
 # Assign the callback functions
-client.on_connect = on_connect
-client.on_message = on_message
+mqttC.on_connect = on_connect
+mqttC.on_message = on_message
 
 # Connect to the broker
-client.connect(broker_address, broker_port)
+# mqttC.connect(broker_address, broker_port)
 
 # Start the MQTT client loop
-client.loop_start()
+# mqttC.loop_start()
 
 # Publish messages to the topics
-try:
-    while True:
-        cmd = input("user cmd:").split()
-        if len(cmd) > 1:
-            topic, value = cmd
-        else:
-            continue
-
-        if topic not in pub_topics:
-            print("Topic not available")
-        print(client.publish(globalName + topic, value))
-        """
-        for i, topic in enumerate(topics):
-            message = f"Message from Program 2 to {topic}"
-            client.publish(topic, message)
-            print(f"Published message to {topic}: {message}")
-            time.sleep(1)
-        time.sleep(5)  # Delay between each round of publishing
-        """
-except KeyboardInterrupt:
-    client.loop_stop()
-    client.disconnect()
-
-# Stop the MQTT client loop and disconnect
-client.loop_stop()
-client.disconnect()
+# try:
+#     while True:
+#         cmd = input("user cmd:").split()
+#         if len(cmd) > 1:
+#             topic, value = cmd
+#         else:
+#             continue
+#
+#         if topic not in pub_topics:
+#             print("Topic not available")
+#         print(mqttC.publish(globalName + topic, value))
+#         """
+#         for i, topic in enumerate(topics):
+#             message = f"Message from Program 2 to {topic}"
+#             mqttC.publish(topic, message)
+#             print(f"Published message to {topic}: {message}")
+#             time.sleep(1)
+#         time.sleep(5)  # Delay between each round of publishing
+#         """
+# except KeyboardInterrupt:
+#     mqttC.loop_stop()
+#     mqttC.disconnect()
+#
+# # Stop the MQTT client loop and disconnect
+# mqttC.loop_stop()
+# mqttC.disconnect()

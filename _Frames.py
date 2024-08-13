@@ -5,18 +5,13 @@ from utils import fonts
 def dash(self):
     """Dashboard widget"""
     self.clear_frame()
-    self.bt_from_frame1 = ctk.CTkButton(
-        self.frame, text="dash", command=lambda: print("test dash")
-    )
-    self.bt_from_frame1.grid(row=0, column=0, padx=20, pady=(10, 0))
-    self.bt_from_frame2 = ctk.CTkButton(
-        self.frame, text="dash 1", command=lambda: print("test dash 1")
-    )
-    self.bt_from_frame2.grid(row=1, column=0, padx=20, pady=(10, 0))
+    #ctk.CTkLabel...
+    telemetryBox = ctk.CTkTextbox(self.frame,)
+    telemetryBox.place(x=100, y=100)
 
-
+   
 #  self.frame   ----> statement widget
-
+from MQTT import mqttC
 
 def mqtt_setup(self):
     """MQTT Setup Widget"""
@@ -49,7 +44,19 @@ def mqtt_setup(self):
 
     # Connect
     def connect_event():
-        print(f"Connect to {hostEntry.get()}:{portEntry.get()}")
+        print(f"Connecting to {hostEntry.get()}:{portEntry.get()}...")
+        try:
+            result = mqttC.connect(hostEntry.get(), int(portEntry.get()))
+            mqttC.loop_start()
+            print('Connected')
+            success = True
+        except Exception:
+            print('CONNECTION FAILED!')
+            success = False
+        color = '#5f9661' if success else '#d18984'
+        hostEntry.configure(border_color=color, placeholder_text_color=color)
+        portEntry.configure(border_color=color, placeholder_text_color=color)
+
 
     ctk.CTkButton(
         self.frame, text="Connect", font=fonts.button, command=connect_event
@@ -153,11 +160,13 @@ def radio_config(self):
     # SUBMIT
     def button_event():
         value, unit = (float(freqEntry.get()), freqCombo.get())
-        freqval = value * 1e6 if unit == "MHz" else value
+        freqval = int(value * 1e6 if unit == "MHz" else value)
         print(value, unit, " -> ", freqval)
+        mqttC.publish('radio/freq', str(freqval))
 
         value = bwopts[bwOption.get()]
         print(value)
+        mqttC.publish('radio/bw', str(value))
 
     button = ctk.CTkButton(
         self.frame, text="Submit", font=fonts.button, command=button_event
