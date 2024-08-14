@@ -3,6 +3,8 @@ import tkinter
 import customtkinter
 
 import _Frames
+from MQTT import mqttC
+from utils import colors
 
 DARK_MODE = "dark"
 customtkinter.set_appearance_mode(DARK_MODE)
@@ -27,9 +29,11 @@ class App(customtkinter.CTk):
         self.title("IST Ground Station")
         self.geometry("1000x1000")
 
+        self.telemetry = '...'
         # root!
         self.main_container = customtkinter.CTkFrame(self, corner_radius=10)
-        self.main_container.pack(fill=tkinter.BOTH, expand=True, padx=10, pady=10)
+        self.main_container.pack(
+            fill=tkinter.BOTH, expand=True, padx=10, pady=10)
 
         # left side panel -> for frame selection
         self.left_side_panel = customtkinter.CTkFrame(
@@ -54,8 +58,8 @@ class App(customtkinter.CTk):
         self.bt_Quit = customtkinter.CTkButton(
             self.left_side_panel,
             text="Quit",
-            fg_color="#EA0000",
-            hover_color="#B20000",
+            fg_color=colors.red,
+            hover_color=colors.red_hover,
             command=self.close_window,
         )
         self.bt_Quit.grid(row=9, column=0, padx=20, pady=10)
@@ -97,8 +101,28 @@ class App(customtkinter.CTk):
             pady=0,
         )
 
+    def update_telemetryBox(telemetry, msg):
+        new = f"\n{msg.topic}: {msg.payload.decode()}"
+        telemetry += new
+
+    #     def on_message(client, userdata, msg):
+    #         print(f"Received message on {msg.topic}: {msg.payload.decode()}")
+    #         # previous = self.telemetryBox.get()
+    #         # new = f"{msg.topic}: {msg.payload.decode()}"
+    #         # self.telemetryBox.configure(text=f"{previous}\n{new}")
+    #         update_telemetryBox(telemetry, msg)
+
     def dash(self):
-        _Frames.dash(self)
+        # self.telemetryBox = _Frames.dash(self)
+        """Dashboard widget"""
+        self.clear_frame()
+        # ctk.CTkLabel...
+        telemetryBox = customtkinter.CTkLabel(
+            self.frame,
+            text=self.telemetry,
+        )
+        telemetryBox.place(x=100, y=100)
+        print(self.telemetry)
 
     def mqtt_setup(self):
         _Frames.mqtt_setup(self)
@@ -124,4 +148,22 @@ class App(customtkinter.CTk):
 
 
 a = App()
+
+
+def update_telemetryBox(app, msg):
+    new = f"\n{msg.topic}: {msg.payload.decode()}"
+    app.telemetry += new
+    
+
+def on_message(client, userdata, msg):
+    print(f"Received message on {msg.topic}: {msg.payload.decode()}")
+    # previous = self.telemetryBox.get()
+    # new = f"{msg.topic}: {msg.payload.decode()}"
+    # self.telemetryBox.configure(text=f"{previous}\n{new}")
+    update_telemetryBox(a, msg)
+
+
+mqttC.on_message = on_message
+
+
 a.mainloop()

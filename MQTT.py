@@ -26,8 +26,8 @@ def on_connect(client, userdata, flags, rc):
 # Define the on_message callback function
 
 
-def on_message(client, userdata, msg):
-    print(f"Received message on {msg.topic}: {msg.payload.decode()}")
+# def on_message(client, userdata, msg):
+#     print(f"Received message on {msg.topic}: {msg.payload.decode()}")
 
 
 # Initialize the MQTT client
@@ -35,7 +35,7 @@ mqttC = mqtt_client.Client()
 
 # Assign the callback functions
 mqttC.on_connect = on_connect
-mqttC.on_message = on_message
+# mqttC.on_message = on_message
 
 # Connect to the broker
 # mqttC.connect(broker_address, broker_port)
