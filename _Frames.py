@@ -1,17 +1,40 @@
 import customtkinter as ctk
-from utils import fonts
 
+from MQTT import mqttC
+from utils import colors, fonts
+
+telemetry = 'abcd'
 
 def dash(self):
     """Dashboard widget"""
     self.clear_frame()
-    #ctk.CTkLabel...
-    telemetryBox = ctk.CTkTextbox(self.frame,)
+    # ctk.CTkLabel...
+    telemetryBox = ctk.CTkLabel(
+        self.frame,
+        text=telemetry,
+    )
     telemetryBox.place(x=100, y=100)
+    print(telemetry)
+    return telemetryBox
 
-   
 #  self.frame   ----> statement widget
-from MQTT import mqttC
+
+
+# def update_telemetryBox(telemetry, msg):
+#     new = f"\n{msg.topic}: {msg.payload.decode()}"
+#     telemetry += new
+# 
+# 
+# def on_message(client, userdata, msg):
+#     print(f"Received message on {msg.topic}: {msg.payload.decode()}")
+#     # previous = self.telemetryBox.get()
+#     # new = f"{msg.topic}: {msg.payload.decode()}"
+#     # self.telemetryBox.configure(text=f"{previous}\n{new}")
+#     update_telemetryBox(telemetry, msg)
+# 
+# 
+# mqttC.on_message = on_message
+
 
 def mqtt_setup(self):
     """MQTT Setup Widget"""
@@ -48,15 +71,14 @@ def mqtt_setup(self):
         try:
             result = mqttC.connect(hostEntry.get(), int(portEntry.get()))
             mqttC.loop_start()
-            print('Connected')
+            print("Connected")
             success = True
         except Exception:
-            print('CONNECTION FAILED!')
+            print("CONNECTION FAILED!")
             success = False
-        color = '#5f9661' if success else '#d18984'
+        color = colors.connected if success else colors.failed
         hostEntry.configure(border_color=color, placeholder_text_color=color)
         portEntry.configure(border_color=color, placeholder_text_color=color)
-
 
     ctk.CTkButton(
         self.frame, text="Connect", font=fonts.button, command=connect_event
@@ -82,8 +104,7 @@ def radio_config(self):
     self.clear_frame()
 
     # Frame Title
-    ctk.CTkLabel(self.frame, text="Radio Config",
-                 font=fonts.header).pack()
+    ctk.CTkLabel(self.frame, text="Radio Config", font=fonts.header).pack()
 
     # FREQUENCY
     freqLabel = ctk.CTkLabel(self.frame, text="Frequency", font=fonts.label)
@@ -162,11 +183,11 @@ def radio_config(self):
         value, unit = (float(freqEntry.get()), freqCombo.get())
         freqval = int(value * 1e6 if unit == "MHz" else value)
         print(value, unit, " -> ", freqval)
-        mqttC.publish('radio/freq', str(freqval))
+        mqttC.publish("radio/freq", str(freqval))
 
         value = bwopts[bwOption.get()]
         print(value)
-        mqttC.publish('radio/bw', str(value))
+        mqttC.publish("radio/bw", str(value))
 
     button = ctk.CTkButton(
         self.frame, text="Submit", font=fonts.button, command=button_event
