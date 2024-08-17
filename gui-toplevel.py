@@ -5,6 +5,7 @@ import customtkinter
 import _Frames
 from MQTT import mqttC
 from utils import colors
+from defaults import Default
 
 DARK_MODE = "dark"
 customtkinter.set_appearance_mode(DARK_MODE)
@@ -25,6 +26,11 @@ class App(customtkinter.CTk):
             "View": self.view,
         }
         super().__init__()
+
+        # values -------------------------------------
+        self.values = Default
+
+        # --------------------------------------------
 
         self.title("IST Ground Station")
         self.geometry("1000x1000")
@@ -100,6 +106,8 @@ class App(customtkinter.CTk):
             padx=0,
             pady=0,
         )
+
+        _Frames.mqtt_setup(self)
 
     def update_telemetryBox(telemetry, msg):
         new = f"\n{msg.topic}: {msg.payload.decode()}"
