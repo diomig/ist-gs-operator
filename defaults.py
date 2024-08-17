@@ -1,5 +1,6 @@
 class Default:
-    freq = 433e6        # Hz
+    freq = 433          # MHz
+    freq_unit = 'MHz'
     bw = 125000         # Hz
     cr = 5
     sf = 7
@@ -14,4 +15,9 @@ class Default:
     node_addr = 186
     dest_addr = 171
 
+    chksum = False
 
+    host = ''
+    port = ''
+    usr = ''
+    pw = ''
