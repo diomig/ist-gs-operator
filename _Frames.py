@@ -53,13 +53,15 @@ def mqtt_setup(self):
     )
     portEntry.place(x=420, y=80)
 
-    ctk.CTkLabel(self.frame, text="Username", font=fonts.label).place(x=40, y=250)
+    ctk.CTkLabel(self.frame, text="Username",
+                 font=fonts.label).place(x=40, y=250)
     unameEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Username", font=fonts.entry, width=300
     )
     unameEntry.place(x=40, y=280)
 
-    ctk.CTkLabel(self.frame, text="Password", font=fonts.label).place(x=40, y=350)
+    ctk.CTkLabel(self.frame, text="Password",
+                 font=fonts.label).place(x=40, y=350)
     pwEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Password", font=fonts.entry, width=300
     )
@@ -140,12 +142,9 @@ def radio_config(self):
     bwOption.place(x=150, y=100)
 
     # CODE RATE =========================================
-    ctk.CTklabel(self.frame, text="CR", font=fonts.label).place(x=400, y=100)
+    ctk.CTkLabel(self.frame, text="CR", font=fonts.label).place(x=400, y=100)
     cropts = {"4/5": 5, "4/6": 6, "4/7": 7, "4/8": 8}
-    crOption = ctk.CTkOptionMenu(
-        self.frame,
-        values=list(cropts.keys())
-    )
+    crOption = ctk.CTkOptionMenu(self.frame, values=list(cropts.keys()))
     crOption.place(x=450, y=100)
     # Spreading Factor ==================================
 
@@ -158,11 +157,12 @@ def radio_config(self):
     sfSegmented = ctk.CTkSegmentedButton(
         self.frame, values=range(7, 12 + 1), command=sfCallback
     )
-    sfSegmented.set("Value 1")
+    sfSegmented.set(10)
     sfSegmented.place(x=200, y=200)
 
     # TX POWER ========================================
-    ctk.CTkLabel(self.frame, text="Tx Power", font=fonts.label).place(x=10, y=250)
+    ctk.CTkLabel(self.frame, text="Tx Power",
+                 font=fonts.label).place(x=10, y=250)
 
     def slider_event(value):
         txpwrValue.configure(text=f"{int(value)} dBm")
@@ -172,11 +172,14 @@ def radio_config(self):
         self.frame, from_=5, to=23, number_of_steps=18, command=slider_event
     )
     txpwrSlider.place(x=200, y=250)
-    txpwrValue = ctk.CTkLabel(self.frame, text=f"-- dBm", font=fonts.label)
-    txpwrValue.place(x=600, y=250)
+    txpwrValue = ctk.CTkLabel(
+        self.frame, text="-- dBm", font=fonts.units, text_color=colors.units
+    )
+    txpwrValue.place(x=410, y=250)
 
     # LNA GAIN ========================================
-    ctk.CTkLabel(self.frame, text="LNA Gain", font=fonts.label).place(x=10, y=300)
+    ctk.CTkLabel(self.frame, text="LNA Gain",
+                 font=fonts.label).place(x=10, y=300)
 
     def lna_slider_event(value):
         lnaValue.configure(text=f"Lvl {int(value)}")
@@ -186,11 +189,14 @@ def radio_config(self):
         self.frame, from_=1, to=6, number_of_steps=5, command=lna_slider_event
     )
     lnaSlider.place(x=200, y=300)
-    lnaValue = ctk.CTkLabel(self.frame, text="Lvl --")
-    lnaValue.place(x=600, y=300)
+    lnaValue = ctk.CTkLabel(
+        self.frame, text="Lvl --", font=fonts.units, text_color=colors.units
+    )
+    lnaValue.place(x=410, y=300)
 
     # ACKNOWLEDGE =====================================
-    ctk.CTkLabel(self.frame, text="ACK Delay", font=fonts.label).place(x=20, y=350)
+    ctk.CTkLabel(self.frame, text="ACK Delay",
+                 font=fonts.label).place(x=20, y=350)
     ackdelayEntry = ctk.CTkEntry(
         self.frame, placeholder_text="ACK Delay", font=fonts.entry, width=100
     )
@@ -199,7 +205,8 @@ def radio_config(self):
         x=125, y=380
     )
 
-    ctk.CTkLabel(self.frame, text="ACK Wait", font=fonts.label).place(x=220, y=350)
+    ctk.CTkLabel(self.frame, text="ACK Wait",
+                 font=fonts.label).place(x=220, y=350)
     ackwaitEntry = ctk.CTkEntry(
         self.frame, placeholder_text="ACK Wait", font=fonts.entry, width=100
     )
@@ -208,7 +215,8 @@ def radio_config(self):
         x=325, y=380
     )
 
-    ctk.CTkLabel(self.frame, text="Rx Timeout", font=fonts.label).place(x=420, y=350)
+    ctk.CTkLabel(self.frame, text="Rx Timeout",
+                 font=fonts.label).place(x=420, y=350)
     rxtoEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Rx Timeout", font=fonts.entry, width=100
     )
@@ -222,7 +230,8 @@ def radio_config(self):
     def chksumEvent():
         print("CHEKSUM: ", has_chksum.get())
 
-    ctk.CTkLabel(self.frame, text="Checksum", font=fonts.label).place(x=10, y=600)
+    ctk.CTkLabel(self.frame, text="Checksum",
+                 font=fonts.label).place(x=10, y=600)
     has_chksum = ctk.StringVar(value=True)
     chksumSwitch = ctk.CTkSwitch(
         self.frame,
@@ -261,7 +270,8 @@ def change_scaling_event(new_scaling):
 def view(self):
     """edit UI"""
     self.clear_frame()
-    self.scaling_label = ctk.CTkLabel(self.frame, text="UI Scaling:", anchor="w")
+    self.scaling_label = ctk.CTkLabel(
+        self.frame, text="UI Scaling:", anchor="w")
     self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
 
     self.scaling_optionemenu = ctk.CTkOptionMenu(
@@ -269,5 +279,6 @@ def view(self):
         values=["80%", "90%", "100%", "110%", "120%"],
         command=change_scaling_event,
     )
-    self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20), sticky="s")
+    self.scaling_optionemenu.grid(
+        row=8, column=0, padx=20, pady=(10, 20), sticky="s")
     # TODO: Change theme
