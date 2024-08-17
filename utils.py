@@ -1,6 +1,7 @@
 class fonts:
     header = ("SF Pro Display", 40)
     label = ("Roboto", 20)
+    units = ("Roboto", 16)
     entry = ("calibri", 14)
     button = ("SF Pro Display", 17)
 
@@ -8,5 +9,6 @@ class fonts:
 class colors:
     connected = "#5f9661"
     failed = "#d18984"
-    red = '#ea0000'
-    red_hover = '#b20000'
+    red = "#ea0000"
+    red_hover = "#b20000"
+    units = '#687078'
