@@ -118,7 +118,7 @@ def radio_config(self):
     freqCombo = ctk.CTkComboBox(self.frame, values=["Hz", "MHz"], width=70)
     freqCombo.place(x=300, y=50)
 
-    # BANDWIDTH
+    # BANDWIDTH ==========================================
     bwLabel = ctk.CTkLabel(self.frame, text="Bandwidth", font=fonts.label)
     bwLabel.place(x=10, y=100)
     bwopts = {
@@ -139,7 +139,16 @@ def radio_config(self):
     )
     bwOption.place(x=150, y=100)
 
-    # Spreading Factor
+    # CODE RATE =========================================
+    ctk.CTklabel(self.frame, text="CR", font=fonts.label).place(x=400, y=100)
+    cropts = {"4/5": 5, "4/6": 6, "4/7": 7, "4/8": 8}
+    crOption = ctk.CTkOptionMenu(
+        self.frame,
+        values=list(cropts.keys())
+    )
+    crOption.place(x=450, y=100)
+    # Spreading Factor ==================================
+
     def sfCallback(value):
         print("segmented button clicked:", value)
 
@@ -186,21 +195,27 @@ def radio_config(self):
         self.frame, placeholder_text="ACK Delay", font=fonts.entry, width=100
     )
     ackdelayEntry.place(x=20, y=380)
-    ctk.CTkLabel(self.frame, text='s', font=fonts.units, text_color=colors.units).place(x=125, y=380)
+    ctk.CTkLabel(self.frame, text="s", font=fonts.units, text_color=colors.units).place(
+        x=125, y=380
+    )
 
     ctk.CTkLabel(self.frame, text="ACK Wait", font=fonts.label).place(x=220, y=350)
     ackwaitEntry = ctk.CTkEntry(
         self.frame, placeholder_text="ACK Wait", font=fonts.entry, width=100
     )
     ackwaitEntry.place(x=220, y=380)
-    ctk.CTkLabel(self.frame, text='s', font=fonts.units, text_color=colors.units).place(x=325, y=380)
+    ctk.CTkLabel(self.frame, text="s", font=fonts.units, text_color=colors.units).place(
+        x=325, y=380
+    )
 
     ctk.CTkLabel(self.frame, text="Rx Timeout", font=fonts.label).place(x=420, y=350)
     rxtoEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Rx Timeout", font=fonts.entry, width=100
     )
     rxtoEntry.place(x=420, y=380)
-    ctk.CTkLabel(self.frame, text='s', font=fonts.units, text_color=colors.units).place(x=525, y=380)
+    ctk.CTkLabel(self.frame, text="s", font=fonts.units, text_color=colors.units).place(
+        x=525, y=380
+    )
 
     # CHECKSUM ========================================
 
