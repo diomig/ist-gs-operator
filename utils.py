@@ -12,3 +12,4 @@ class colors:
     red = "#ea0000"
     red_hover = "#b20000"
     units = '#687078'
+    border = ["#979DA2", "#565B5E"]
