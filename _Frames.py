@@ -146,6 +146,19 @@ def radio_config(self):
     cropts = {"4/5": 5, "4/6": 6, "4/7": 7, "4/8": 8}
     crOption = ctk.CTkOptionMenu(self.frame, values=list(cropts.keys()))
     crOption.place(x=450, y=100)
+
+    # PREAMBLE LENGTH ===================================
+    ctk.CTkLabel(self.frame, text="Preamble Length", font=fonts.label).place(
+        x=10, y=150
+    )
+    plenEntry = ctk.CTkEntry(
+        self.frame, placeholder_text="--", font=fonts.entry, width=80
+    )
+    plenEntry.place(x=180, y=150)
+    ctk.CTkLabel(
+        self.frame, text="(3 - 65536)", font=fonts.units, text_color=colors.units
+    ).place(x=290, y=150)
+
     # Spreading Factor ==================================
 
     def sfCallback(value):
