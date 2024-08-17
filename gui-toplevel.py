@@ -29,7 +29,7 @@ class App(customtkinter.CTk):
         self.title("IST Ground Station")
         self.geometry("1000x1000")
 
-        self.telemetry = '...'
+        self.telemetry = "..."
         # root!
         self.main_container = customtkinter.CTkFrame(self, corner_radius=10)
         self.main_container.pack(
@@ -153,7 +153,7 @@ a = App()
 def update_telemetryBox(app, msg):
     new = f"\n{msg.topic}: {msg.payload.decode()}"
     app.telemetry += new
-    
+
 
 def on_message(client, userdata, msg):
     print(f"Received message on {msg.topic}: {msg.payload.decode()}")
@@ -165,5 +165,7 @@ def on_message(client, userdata, msg):
 
 mqttC.on_message = on_message
 
-
-a.mainloop()
+try:
+    a.mainloop()
+except Exception:
+    pass
