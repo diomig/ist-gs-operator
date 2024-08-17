@@ -1,6 +1,6 @@
 class Default:
-    freq = 433e6
-    bw = 125000
+    freq = 433e6        # Hz
+    bw = 125000         # Hz
     cr = 5
     sf = 7
     plen = 16
