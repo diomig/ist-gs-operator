@@ -1,5 +1,18 @@
 import paho.mqtt.client as mqtt_client
 
+class Topics:
+    freq = 'myGS/radio/freq'
+    bw = 'myGS/radio/bw'
+    cr = 'myGS/radio/cr'
+    plen = 'myGS/radio/plen'
+    sf = 'myGS/radio/sf'
+    txpwr = 'myGS/radio/txpwr'
+    lnag = 'myGS/radio/lnag'
+    chksum = 'myGS/radio/chksum'
+    ackdelay = 'myGS/radio/ackd'
+    ackwait = 'myGS/radio/ackw'
+    rxto = 'myGS/radio/rxto'
+
 
 # Define the MQTT topics
 pub_topics = ["radio/freq", "radio/bw", "radio/br", "radio/chksum", "msg/cmd"]
