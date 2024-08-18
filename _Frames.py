@@ -3,7 +3,7 @@ import tkinter as tk
 import customtkinter as ctk
 
 from defaults import Default as df
-from MQTT import mqttC
+from MQTT import mqttC, Topics
 from utils import colors, fonts
 
 telemetry = "abcd"
@@ -168,6 +168,10 @@ def radio_config(self):
         self.values.freq = val
         # TODO: verify boundaries
         print(f"Frequency {self.values.freq} Hz")
+        unit = 1e6 if self.values.freq_unit == 'MHz' else 1
+        f = self.values.freq * unit
+        if f >= 240e6 and f <= 960e6: 
+            mqttC.publish(Topics.freq, f)
 
     freqSV = tk.StringVar()
     freqSV.trace("w", lambda name, index, mode, sv=freqSV: set_freq(freqSV))
@@ -202,6 +206,7 @@ def radio_config(self):
 
     def set_bw(option):
         self.values.bw = bwopts[option]
+        mqttC.publish(Topics.bw, self.values.bw)
 
     bwOption = ctk.CTkOptionMenu(
         self.frame, values=list(bwopts.keys()), command=set_bw)
@@ -214,6 +219,7 @@ def radio_config(self):
 
     def set_cr(option):
         self.values.cr = cropts[option]
+        mqttC.publish(Topics.cr, self.values.cr)
 
     crOption = ctk.CTkOptionMenu(
         self.frame, values=list(cropts.keys()), command=set_cr)
@@ -233,6 +239,8 @@ def radio_config(self):
             self.values.plen = val
         # TODO: verify boundaries
         print(f"Preamble length {self.values.plen}")
+        if self.values.plen >= 3 and self.values.plen<=65536:
+            mqttC.publish(Topics.plen, self.values.plen)
 
     plenSV = tk.StringVar()
     plenSV.trace("w", lambda name, index, mode, sv=plenSV: set_plen(plenSV))
@@ -249,6 +257,7 @@ def radio_config(self):
 
     def sfCallback(value):
         self.values.sf = value
+        mqttC.publish(Topics.sf, self.values.sf)
 
     ctk.CTkLabel(self.frame, text="Spreading Factor", font=fonts.label).place(
         x=10, y=200
@@ -267,6 +276,7 @@ def radio_config(self):
         txpwrValue.configure(text=f"{int(value)} dBm")
         if value != self.values.tx_power:
             self.values.tx_power = value
+            mqttC.publish(Topics.txpwr, self.values.tx_power)
 
     txpwrSlider = ctk.CTkSlider(
         self.frame, from_=5, to=23, number_of_steps=18, command=slider_event
@@ -289,6 +299,7 @@ def radio_config(self):
         lnaValue.configure(text=f"Lvl {int(value)}")
         if value != self.values.lna_gain:
             self.values.lna_gain = value
+            mqttC.publish(Topics.lnag, self.values.lna_gain)
 
     lnaSlider = ctk.CTkSlider(
         self.frame, from_=1, to=6, number_of_steps=5, command=lna_slider_event
@@ -314,6 +325,7 @@ def radio_config(self):
         self.values.ack_delay = val
         # TODO: verify boundaries
         print(f"ACK delay {self.values.ack_delay}")
+        mqttC.publish(Topics.ackdelay, self.values.ack_delay)
 
     ackdSV = tk.StringVar()
     ackdSV.trace("w", lambda name, index, mode,
@@ -337,6 +349,7 @@ def radio_config(self):
         self.values.ack_wait = val
         # TODO: verify boundaries
         print(f"ACK wait {self.values.ack_wait}")
+        mqttC.publish(Topics.ackwait, self.values.ack_wait)
 
     ackwSV = tk.StringVar()
     ackwSV.trace("w", lambda name, index, mode, sv=ackwSV: set_ackwait(ackwSV))
@@ -360,6 +373,7 @@ def radio_config(self):
             self.values.rx_timeout = val
         # TODO: verify boundaries
         print(f"Rx timeout {self.values.rx_timeout}")
+        mqttC.publish(Topics.rxto, self.values.rx_timeout)
 
     rxtoSV = tk.StringVar()
     rxtoSV.trace("w", lambda name, index, mode,
@@ -377,6 +391,7 @@ def radio_config(self):
 
     def chksumEvent():
         self.values.chksum = has_chksum.get()
+        mqttC.publish(Topics.chksum, self.values.chksum)
 
     ctk.CTkLabel(self.frame, text="Checksum",
                  font=fonts.label).place(x=10, y=600)
