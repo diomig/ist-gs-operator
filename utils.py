@@ -13,3 +13,5 @@ class colors:
     red_hover = "#b20000"
     units = '#687078'
     border = ["#979DA2", "#565B5E"]
+    disconnect = '#d9580d'
+    disconnect_hover = '#913b09'
