@@ -3,7 +3,7 @@ import tkinter as tk
 import customtkinter as ctk
 
 from defaults import Default as df
-from MQTT import mqttC, Topics
+from MQTT import Topics, mqttC
 from utils import colors, fonts
 
 telemetry = "abcd"
@@ -104,37 +104,51 @@ def mqtt_setup(self):
         color = colors.connected if success else colors.failed
         hostEntry.configure(border_color=color, placeholder_text_color=color)
         portEntry.configure(border_color=color, placeholder_text_color=color)
+        self.connectionIndicator.configure(
+            text='MQTT\nConnected\n✔️',
+            text_color=colors.connected
+        )
         self.values.host = hostEntry.get()
         self.values.port = portEntry.get()
         self.values.usr = unameEntry.get()
         self.values.pw = pwEntry.get()
         if success:
+            self.connected = True
             connectButton.pack_forget()
-#             disconnectButton.place(relx=0.7, rely=0.9)
-            disconnectButton.pack(side=tk.BOTTOM, padx=50, pady=20) 
+            #             disconnectButton.place(relx=0.7, rely=0.9)
+            disconnectButton.pack(side=tk.BOTTOM, padx=50, pady=20)
 
     connectButton = ctk.CTkButton(
         self.frame, text="Connect", font=fonts.button, command=connect_event
     )
-    connectButton.pack(side=tk.BOTTOM, padx=10, pady=20)
 
     def disconnect_event():
         print("time to go...")
         mqttC.loop_stop()
         mqttC.disconnect()
+        self.connected = False
         hostEntry.configure(border_color=colors.border)
         portEntry.configure(border_color=colors.border)
+        self.connectionIndicator.configure(
+            text='MQTT\nNOT Connected\n❌',
+            text_color=colors.failed
+        )
         disconnectButton.pack_forget()
-#         connectButton.place(relx=0.32, rely=0.9)
+        #         connectButton.place(relx=0.32, rely=0.9)
         connectButton.pack(side=tk.BOTTOM, padx=10, pady=20)
+
     disconnectButton = ctk.CTkButton(
         self.frame,
         text="Disconnect",
         font=fonts.button,
         command=disconnect_event,
         fg_color=colors.disconnect,
-        hover_color=colors.disconnect_hover
+        hover_color=colors.disconnect_hover,
     )
+    if not self.connected:
+        connectButton.pack(side=tk.BOTTOM, padx=10, pady=20)
+    else:
+        disconnectButton.pack(side=tk.BOTTOM, padx=10, pady=20)
 
 
 #  self.frame   ----> categories widget
@@ -157,7 +171,7 @@ def radio_config(self):
     # Frame Title
     ctk.CTkLabel(self.frame, text="Radio Config", font=fonts.header).pack()
 
-    # FREQUENCY
+    # FREQUENCY ===================================
     freqLabel = ctk.CTkLabel(self.frame, text="Frequency", font=fonts.label)
     freqLabel.place(x=10, y=50)
 
@@ -166,12 +180,15 @@ def radio_config(self):
         color = colors.failed if val < 0 else colors.border
         freqEntry.configure(border_color=color)
         self.values.freq = val
-        # TODO: verify boundaries
         print(f"Frequency {self.values.freq} Hz")
-        unit = 1e6 if self.values.freq_unit == 'MHz' else 1
+        unit = 1e6 if self.values.freq_unit == "MHz" else 1
         f = self.values.freq * unit
-        if f >= 240e6 and f <= 960e6: 
+        if f >= 240e6 and f <= 960e6:
             mqttC.publish(Topics.freq, f)
+            color = colors.units
+        else:
+            color = colors.failed
+        freqRange.configure(text_color=color)
 
     freqSV = tk.StringVar()
     freqSV.trace("w", lambda name, index, mode, sv=freqSV: set_freq(freqSV))
@@ -182,12 +199,27 @@ def radio_config(self):
 
     def set_freq_unit(option):
         self.values.freq_unit = option
+        unit = 1e6 if self.values.freq_unit == "MHz" else 1
+        f = self.values.freq * unit
+        if f >= 240e6 and f <= 960e6:
+            mqttC.publish(Topics.freq, f)
+            color = colors.units
+        else:
+            color = colors.failed
+        freqRange.configure(text_color=color)
 
     freqCombo = ctk.CTkComboBox(
         self.frame, values=["Hz", "MHz"], width=70, command=set_freq_unit
     )
     freqCombo.set(self.values.freq_unit)
     freqCombo.place(x=300, y=50)
+    freqRange = ctk.CTkLabel(
+        self.frame,
+        text="[240.0 - 960.0] MHz",
+        font=fonts.units,
+        text_color=colors.units,
+    )
+    freqRange.place(x=380, y=50)
 
     # BANDWIDTH ==========================================
     bwLabel = ctk.CTkLabel(self.frame, text="Bandwidth", font=fonts.label)
@@ -237,10 +269,13 @@ def radio_config(self):
         plenEntry.configure(border_color=color)
         if val > 0:
             self.values.plen = val
-        # TODO: verify boundaries
         print(f"Preamble length {self.values.plen}")
-        if self.values.plen >= 3 and self.values.plen<=65536:
+        if self.values.plen >= 3 and self.values.plen <= 65536:
             mqttC.publish(Topics.plen, self.values.plen)
+            color = colors.units
+        else:
+            color = colors.failed
+        plenRange.configure(text_color=color)
 
     plenSV = tk.StringVar()
     plenSV.trace("w", lambda name, index, mode, sv=plenSV: set_plen(plenSV))
@@ -249,9 +284,10 @@ def radio_config(self):
     )
     plenEntry.insert(0, self.values.plen)
     plenEntry.place(x=180, y=150)
-    ctk.CTkLabel(
+    plenRange = ctk.CTkLabel(
         self.frame, text="(3 - 65536)", font=fonts.units, text_color=colors.units
-    ).place(x=290, y=150)
+    )
+    plenRange.place(x=290, y=150)
 
     # Spreading Factor ==================================
 
