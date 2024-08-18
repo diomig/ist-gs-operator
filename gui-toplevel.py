@@ -29,6 +29,7 @@ class App(customtkinter.CTk):
 
         # values -------------------------------------
         self.values = Default
+        self.connected = False
 
         # --------------------------------------------
 
@@ -83,6 +84,8 @@ class App(customtkinter.CTk):
                 height=30,  # fg_color='#1140e5',
             ).grid(row=i + 1, column=0, padx=20, pady=10)
 
+        self.connectionIndicator = customtkinter.CTkLabel(self.left_side_panel, text='MQTT\nNOT Connected\n❌', text_color=colors.failed)
+        self.connectionIndicator.grid(row=8, column=0, padx=20, pady=10)
         # ----------------------------------------------------
 
         # right side panel -> have self.frame inside it
