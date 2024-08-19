@@ -59,8 +59,7 @@ def mqtt_setup(self):
     ctk.CTkLabel(self.frame, text="Host", font=fonts.label).place(x=20, y=50)
     hostEntry = ctk.CTkEntry(
         self.frame,
-        placeholder_text=(
-            "Host" if not self.values.host else self.values.host),
+        placeholder_text=("Host" if not self.values.host else self.values.host),
         font=fonts.entry,
         width=300,
     )
@@ -69,22 +68,19 @@ def mqtt_setup(self):
     ctk.CTkLabel(self.frame, text="Port", font=fonts.label).place(x=420, y=50)
     portEntry = ctk.CTkEntry(
         self.frame,
-        placeholder_text=(
-            "Port" if not self.values.port else self.values.port),
+        placeholder_text=("Port" if not self.values.port else self.values.port),
         font=fonts.entry,
         width=200,
     )
     portEntry.place(x=420, y=80)
 
-    ctk.CTkLabel(self.frame, text="Username",
-                 font=fonts.label).place(x=40, y=250)
+    ctk.CTkLabel(self.frame, text="Username", font=fonts.label).place(x=40, y=250)
     unameEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Username", font=fonts.entry, width=300
     )
     unameEntry.place(x=40, y=280)
 
-    ctk.CTkLabel(self.frame, text="Password",
-                 font=fonts.label).place(x=40, y=350)
+    ctk.CTkLabel(self.frame, text="Password", font=fonts.label).place(x=40, y=350)
     pwEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Password", font=fonts.entry, width=300
     )
@@ -167,7 +163,7 @@ def radio_config(self):
     self.clear_frame()
 
     # Frame Title
-    ctk.CTkLabel(self.frame, text="Radio Config", font=fonts.header).pack()
+    radioTitle = ctk.CTkLabel(self.frame, text="Radio Config", font=fonts.header)
 
     # FREQUENCY ===================================
     freqLabel = ctk.CTkLabel(self.frame, text="Frequency", font=fonts.label)
@@ -234,25 +230,22 @@ def radio_config(self):
         self.values.bw = bwopts[option]
         mqttC.publish(Topics.bw, self.values.bw)
 
-    bwOption = ctk.CTkOptionMenu(
-        self.frame, values=list(bwopts.keys()), command=set_bw)
+    bwOption = ctk.CTkOptionMenu(self.frame, values=list(bwopts.keys()), command=set_bw)
     bwOption.set(list(bwopts)[list(bwopts.values()).index(self.values.bw)])
 
     # CODE RATE =========================================
-    crLabel = ctk.CTkLabel(self.frame, text="CR", font=fonts.label)
+    crLabel = ctk.CTkLabel(self.frame, text="Code Rate", font=fonts.label)
     cropts = {"4/5": 5, "4/6": 6, "4/7": 7, "4/8": 8}
 
     def set_cr(option):
         self.values.cr = cropts[option]
         mqttC.publish(Topics.cr, self.values.cr)
 
-    crOption = ctk.CTkOptionMenu(
-        self.frame, values=list(cropts.keys()), command=set_cr)
+    crOption = ctk.CTkOptionMenu(self.frame, values=list(cropts.keys()), command=set_cr)
     crOption.set(list(cropts)[list(cropts.values()).index(self.values.cr)])
 
     # PREAMBLE LENGTH ===================================
-    plenLabel = ctk.CTkLabel(
-        self.frame, text="Preamble Length", font=fonts.label)
+    plenLabel = ctk.CTkLabel(self.frame, text="Preamble Length", font=fonts.label)
 
     plenRange = ctk.CTkLabel(
         self.frame, text="(3 - 65536)", font=fonts.units, text_color=colors.units
@@ -285,8 +278,7 @@ def radio_config(self):
         self.values.sf = value
         mqttC.publish(Topics.sf, self.values.sf)
 
-    sfLabel = ctk.CTkLabel(
-        self.frame, text="Spreading Factor", font=fonts.label)
+    sfLabel = ctk.CTkLabel(self.frame, text="Spreading Factor", font=fonts.label)
     sfSegmented = ctk.CTkSegmentedButton(
         self.frame, values=range(7, 12 + 1), command=sfCallback
     )
@@ -345,8 +337,7 @@ def radio_config(self):
         mqttC.publish(Topics.ackdelay, self.values.ack_delay)
 
     ackdSV = tk.StringVar()
-    ackdSV.trace("w", lambda name, index, mode,
-                 sv=ackdSV: set_ackdelay(ackdSV))
+    ackdSV.trace("w", lambda name, index, mode, sv=ackdSV: set_ackdelay(ackdSV))
     ackdelayEntry = ctk.CTkEntry(
         self.frame, font=fonts.entry, width=100, textvariable=ackdSV
     )
@@ -389,8 +380,7 @@ def radio_config(self):
         mqttC.publish(Topics.rxto, self.values.rx_timeout)
 
     rxtoSV = tk.StringVar()
-    rxtoSV.trace("w", lambda name, index, mode,
-                 sv=rxtoSV: set_rxtimeout(rxtoSV))
+    rxtoSV.trace("w", lambda name, index, mode, sv=rxtoSV: set_rxtimeout(rxtoSV))
     rxtoEntry = ctk.CTkEntry(
         self.frame, font=fonts.entry, width=100, textvariable=rxtoSV
     )
@@ -435,6 +425,7 @@ def radio_config(self):
     # ---------------------------------------------------------
     # Place widgets
     # ---------------------------------------------------------
+    """
 
     freqLabel.place(x=10, y=50)
     freqEntry.place(x=150, y=50)
@@ -445,7 +436,6 @@ def radio_config(self):
     button.place(relx=0.32, rely=0.90)
     crLabel.place(x=400, y=100)
     crOption.place(x=450, y=100)
-
     plenLabel.place(x=10, y=150)
     plenEntry.place(x=180, y=150)
     plenRange.place(x=290, y=150)
@@ -469,6 +459,42 @@ def radio_config(self):
     chksumLabel.place(x=10, y=600)
     chksumSwitch.place(x=150, y=600)
 
+    """
+
+    radioTitle.grid(row=0, column=0, columnspan=5)
+    freqLabel.grid(row=1, column=0, padx=10, pady=20, sticky=tk.E)
+    freqEntry.grid(row=1, column=1, padx=10, pady=20, sticky=tk.W)
+    freqCombo.grid(row=1, column=1, padx=(160, 10), pady=20, sticky=tk.E)
+    freqRange.grid(row=1, column=2, padx=10, pady=20, sticky=tk.W)
+    bwLabel.grid(row=2, column=0, padx=10, pady=20, sticky=tk.E)
+    bwOption.grid(row=2, column=1, padx=10, pady=20, sticky=tk.W)
+    crLabel.grid(row=3, column=0, padx=10, pady=20, sticky=tk.E)
+    crOption.grid(row=3, column=1, padx=10, pady=20, sticky=tk.W)
+    plenLabel.grid(row=4, column=0, padx=10, pady=20, sticky=tk.E)
+    plenEntry.grid(row=4, column=1, padx=10, pady=20, sticky=tk.W)
+    plenRange.grid(row=4, column=1, padx=50, pady=20, sticky=tk.E)
+    sfLabel.grid(row=5, column=0, padx=10, pady=20, sticky=tk.E)
+    sfSegmented.grid(row=5, column=1, padx=10, pady=20, sticky=tk.W)
+    txpwrLabel.grid(row=6, column=0, padx=10, pady=20, sticky=tk.E)
+    txpwrSlider.grid(row=6, column=1, padx=10, pady=20)
+    txpwrValue.grid(row=6, column=2, padx=10, pady=20, sticky=tk.W)
+    lnaLabel.grid(row=7, column=0, padx=10, pady=20, sticky=tk.E)
+    lnaSlider.grid(row=7, column=1, padx=10, pady=20)
+    lnaValue.grid(row=7, column=2, padx=10, pady=20, sticky=tk.W)
+    ackdLabel.grid(row=8, column=0, padx=10, pady=20, sticky=tk.E)
+    ackdelayEntry.grid(row=8, column=1, padx=10, pady=20, sticky=tk.W)
+    ackdUnit.grid(row=8, column=1, padx=10, pady=20, sticky=tk.E)
+#     ackwLabel.grid()
+#     ackwaitEntry.grid()
+#     ackwUnit.grid()
+#     rxtoLabel.grid()
+#     rxtoEntry.grid()
+#     rxtoUnit.grid()
+#     chksumLabel.grid()
+#     chksumSwitch.grid()
+#     button.grid(row=2, column=1, padx=10, pady=20)
+
+
 
 # ===================================================
 # Change scaling of all widget 80% to 120%
@@ -480,8 +506,7 @@ def change_scaling_event(new_scaling):
 def view(self):
     """edit UI"""
     self.clear_frame()
-    self.scaling_label = ctk.CTkLabel(
-        self.frame, text="UI Scaling:", anchor="w")
+    self.scaling_label = ctk.CTkLabel(self.frame, text="UI Scaling:", anchor="w")
     self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
 
     self.scaling_optionemenu = ctk.CTkOptionMenu(
@@ -495,4 +520,4 @@ def view(self):
 #         row=8, column=0, padx=20, pady=(10, 20), sticky="s")
 # TODO: Change theme
 # TODO: Change theme
-    # TODO: Change theme
+# TODO: Change theme
