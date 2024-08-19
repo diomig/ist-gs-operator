@@ -1,17 +1,19 @@
 import paho.mqtt.client as mqtt_client
 
+globalName = "myGS/"
+
 class Topics:
-    freq = 'myGS/radio/freq'
-    bw = 'myGS/radio/bw'
-    cr = 'myGS/radio/cr'
-    plen = 'myGS/radio/plen'
-    sf = 'myGS/radio/sf'
-    txpwr = 'myGS/radio/txpwr'
-    lnag = 'myGS/radio/lnag'
-    chksum = 'myGS/radio/chksum'
-    ackdelay = 'myGS/radio/ackd'
-    ackwait = 'myGS/radio/ackw'
-    rxto = 'myGS/radio/rxto'
+    freq = f'{globalName}radio/freq'
+    bw = f'{globalName}radio/bw'
+    cr = f'{globalName}radio/cr'
+    plen = f'{globalName}radio/plen'
+    sf = f'{globalName}radio/sf'
+    txpwr = f'{globalName}radio/txpwr'
+    lnag = f'{globalName}radio/lnag'
+    chksum = f'{globalName}radio/chksum'
+    ackdelay = f'{globalName}radio/ackd'
+    ackwait = f'{globalName}radio/ackw'
+    rxto = f'{globalName}radio/rxto'
 
 
 # Define the MQTT topics
@@ -20,10 +22,9 @@ sub_topics = ["msg/telemetry", "msg/payload", "msg/reply"]
 
 # Define the MQTT broker address and port
 # broker_address = "10.42.0.236"
-broker_address = "test.mosquitto.org"  # "localhost"
-broker_port = 1883
+# broker_address = "test.mosquitto.org"  # "localhost"
+# broker_port = 1883
 
-globalName = "myGS/"
 
 # Define the on_connect callback function
 
