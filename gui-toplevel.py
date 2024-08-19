@@ -3,9 +3,9 @@ import tkinter
 import customtkinter
 
 import _Frames
-from MQTT import mqttC
-from utils import colors
 from defaults import Default
+from MQTT import mqttC
+from utils import colors, fonts
 
 DARK_MODE = "dark"
 customtkinter.set_appearance_mode(DARK_MODE)
@@ -39,8 +39,7 @@ class App(customtkinter.CTk):
         self.telemetry = "..."
         # root!
         self.main_container = customtkinter.CTkFrame(self, corner_radius=10)
-        self.main_container.pack(
-            fill=tkinter.BOTH, expand=True, padx=10, pady=10)
+        self.main_container.pack(fill=tkinter.BOTH, expand=True, padx=10, pady=10)
 
         # left side panel -> for frame selection
         self.left_side_panel = customtkinter.CTkFrame(
@@ -84,7 +83,12 @@ class App(customtkinter.CTk):
                 height=30,  # fg_color='#1140e5',
             ).grid(row=i + 1, column=0, padx=20, pady=10)
 
-        self.connectionIndicator = customtkinter.CTkLabel(self.left_side_panel, text='MQTT\nNOT Connected\n❌', text_color=colors.failed)
+        self.connectionIndicator = customtkinter.CTkLabel(
+            self.left_side_panel,
+            text="MQTT\nNOT Connected\n❌",
+            text_color=colors.failed,
+            font=fonts.indicator,
+        )
         self.connectionIndicator.grid(row=8, column=0, padx=20, pady=10)
         # ----------------------------------------------------
 
@@ -110,9 +114,11 @@ class App(customtkinter.CTk):
             pady=0,
         )
 
-        _Frames.mqtt_setup(self)
-
+        _Frames.mqtt_setup_create(self)
         _Frames.radio_config_create(self)
+
+        # MQTT setup is the first thing that appears
+        _Frames.mqtt_setup(self)
 
     def update_telemetryBox(telemetry, msg):
         new = f"\n{msg.topic}: {msg.payload.decode()}"
@@ -134,7 +140,7 @@ class App(customtkinter.CTk):
             self.frame,
             text=self.telemetry,
         )
-        telemetryBox.place(x=100, y=100)
+        telemetryBox.grid()
         print(self.telemetry)
 
     def mqtt_setup(self):
