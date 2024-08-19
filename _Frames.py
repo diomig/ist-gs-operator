@@ -448,39 +448,39 @@ def radio_config(self):
     self.lnaSlider.grid(row=7, column=1, padx=10, pady=20)
     self.lnaValue.grid(row=7, column=2, padx=10, pady=20, sticky=tk.W)
     self.ackdLabel.grid(
-        row=8, column=0, padx=(10, 10), pady=20, sticky=tk.W, columnspan=5
+        row=8, column=0, padx=10
     )
     self.ackdelayEntry.grid(
-        row=8, column=0, padx=(100, 10), pady=20, sticky=tk.W, columnspan=5
+        row=9, column=0, padx=10
     )
     self.ackdUnit.grid(
-        row=8, column=0, padx=(200, 10), pady=20, sticky=tk.W, columnspan=5
+        row=9, column=0, padx=(130, 10)
     )
     self.ackwLabel.grid(
-        row=8, column=0, padx=(200, 10), pady=20, sticky=tk.W, columnspan=5
+        row=8, column=1, padx=10
     )
     self.ackwaitEntry.grid(
-        row=8, column=0, padx=(250, 10), pady=20, sticky=tk.W, columnspan=5
+        row=9, column=1, padx=10
     )
     self.ackwUnit.grid(
-        row=8, column=0, padx=(300, 10), pady=20, sticky=tk.W, columnspan=5
+        row=9, column=1, padx=(130, 10)
     )
     self.rxtoLabel.grid(
-        row=8, column=0, padx=(400, 10), pady=20, sticky=tk.W, columnspan=5
+        row=8, column=2, padx=10
     )
     self.rxtoEntry.grid(
-        row=8, column=0, padx=(450, 10), pady=20, sticky=tk.W, columnspan=5
+        row=9, column=2, padx=10
     )
     self.rxtoUnit.grid(
-        row=8, column=0, padx=(500, 10), pady=20, sticky=tk.W, columnspan=5
+        row=9, column=2, padx=(130, 10)
     )
     self.chksumLabel.grid(
-        row=9, column=0, padx=(10, 10), pady=20, sticky=tk.E, columnspan=5
+        row=10, column=0, padx=10, pady=20, sticky=tk.E
     )
     self.chksumSwitch.grid(
-        row=9, column=1, padx=(10, 10), pady=20, sticky=tk.E, columnspan=5
+        row=10, column=1, padx=10, pady=20, sticky=tk.E
     )
-    self.button.grid(row=10, column=1, padx=(10, 10), pady=20, columnspan=5)
+    self.button.grid(row=11, column=1, padx=(10, 10), pady=20 , columnspan=5)
 
 
 # ===================================================
