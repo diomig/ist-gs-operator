@@ -16,3 +16,4 @@ class colors:
     border = ["#979DA2", "#565B5E"]
     disconnect = '#d9580d'
     disconnect_hover = '#913b09'
+    bg = '#000811'
