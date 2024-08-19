@@ -112,6 +112,8 @@ class App(customtkinter.CTk):
 
         _Frames.mqtt_setup(self)
 
+        _Frames.radio_config_create(self)
+
     def update_telemetryBox(telemetry, msg):
         new = f"\n{msg.topic}: {msg.payload.decode()}"
         telemetry += new
@@ -155,7 +157,8 @@ class App(customtkinter.CTk):
     # CLEAR ALL THE WIDGET BEFORE loading the widget of the concerned page
     def clear_frame(self):
         for widget in self.frame.winfo_children():
-            widget.destroy()
+            # widget.destroy()
+            widget.grid_forget()
 
 
 a = App()
