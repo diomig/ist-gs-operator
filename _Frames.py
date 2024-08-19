@@ -53,44 +53,45 @@ def dash(self):
 # mqttC.on_message = on_message
 
 
-def mqtt_setup(self):
+def mqtt_setup_create(self):
     """MQTT Setup Widget"""
-    self.clear_frame()
-    ctk.CTkLabel(self.frame, text="Host", font=fonts.label).grid()
-    hostEntry = ctk.CTkEntry(
+    self.hostLabel = ctk.CTkLabel(self.frame, text="Host", font=fonts.label)
+
+    self.hostEntry = ctk.CTkEntry(
         self.frame,
-        placeholder_text=("Host" if not self.values.host else self.values.host),
+        placeholder_text=(
+            "Host" if not self.values.host else self.values.host),
         font=fonts.entry,
         width=300,
     )
-    hostEntry.grid()
 
-    ctk.CTkLabel(self.frame, text="Port", font=fonts.label).grid()
-    portEntry = ctk.CTkEntry(
+    self.portLabel = ctk.CTkLabel(self.frame, text="Port", font=fonts.label)
+    self.portEntry = ctk.CTkEntry(
         self.frame,
-        placeholder_text=("Port" if not self.values.port else self.values.port),
+        placeholder_text=(
+            "Port" if not self.values.port else self.values.port),
         font=fonts.entry,
         width=200,
     )
-    portEntry.grid()
 
-    ctk.CTkLabel(self.frame, text="Username", font=fonts.label).grid()
-    unameEntry = ctk.CTkEntry(
+    self.unameLabel = ctk.CTkLabel(
+        self.frame, text="Username", font=fonts.label)
+    self.unameEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Username", font=fonts.entry, width=300
     )
-    unameEntry.grid()
 
-    ctk.CTkLabel(self.frame, text="Password", font=fonts.label).grid()
-    pwEntry = ctk.CTkEntry(
+    self.pwLabel = ctk.CTkLabel(self.frame, text="Password", font=fonts.label)
+    self.pwEntry = ctk.CTkEntry(
         self.frame, placeholder_text="Password", font=fonts.entry, width=300
     )
-    pwEntry.grid()
 
     # Connect
     def connect_event():
-        print(f"Connecting to {hostEntry.get()}:{portEntry.get()}...")
+        print(
+            f"Connecting to {self.hostEntry.get()}:{self.portEntry.get()}...")
         try:
-            result = mqttC.connect(hostEntry.get(), int(portEntry.get()))
+            result = mqttC.connect(self.hostEntry.get(),
+                                   int(self.portEntry.get()))
             mqttC.loop_start()
             print("Connected")
             success = True
@@ -98,21 +99,24 @@ def mqtt_setup(self):
             print("CONNECTION FAILED!")
             success = False
         color = colors.connected if success else colors.failed
-        hostEntry.configure(border_color=color, placeholder_text_color=color)
-        portEntry.configure(border_color=color, placeholder_text_color=color)
-        self.connectionIndicator.configure(
-            text="MQTT\nConnected\n✔️", text_color=colors.connected
-        )
-        self.values.host = hostEntry.get()
-        self.values.port = portEntry.get()
-        self.values.usr = unameEntry.get()
-        self.values.pw = pwEntry.get()
+        self.hostEntry.configure(
+            border_color=color, placeholder_text_color=color)
+        self.portEntry.configure(
+            border_color=color, placeholder_text_color=color)
+        if success:
+            self.connectionIndicator.configure(
+                text="MQTT\nConnected\n✔️", text_color=colors.connected
+            )
+        self.values.host = self.hostEntry.get()
+        self.values.port = self.portEntry.get()
+        self.values.usr = self.unameEntry.get()
+        self.values.pw = self.pwEntry.get()
         if success:
             self.connected = True
-            connectButton.grid_forget()
-            disconnectButton.grid()  # .pack(side=tk.BOTTOM, padx=50, pady=20)
+            self.connectButton.grid_forget()
+            self.disconnectButton.grid(row=8, column=0, columnspan=4, pady=100)
 
-    connectButton = ctk.CTkButton(
+    self.connectButton = ctk.CTkButton(
         self.frame, text="Connect", font=fonts.button, command=connect_event
     )
 
@@ -121,15 +125,15 @@ def mqtt_setup(self):
         mqttC.loop_stop()
         mqttC.disconnect()
         self.connected = False
-        hostEntry.configure(border_color=colors.border)
-        portEntry.configure(border_color=colors.border)
+        self.hostEntry.configure(border_color=colors.border)
+        self.portEntry.configure(border_color=colors.border)
         self.connectionIndicator.configure(
             text="MQTT\nNOT Connected\n❌", text_color=colors.failed
         )
-        disconnectButton.grid_forget()
-        connectButton.grid()  # .pack(side=tk.BOTTOM, padx=10, pady=20)
+        self.disconnectButton.grid_forget()
+        self.connectButton.grid(row=8, column=0, columnspan=4, pady=100)
 
-    disconnectButton = ctk.CTkButton(
+    self.disconnectButton = ctk.CTkButton(
         self.frame,
         text="Disconnect",
         font=fonts.button,
@@ -137,12 +141,23 @@ def mqtt_setup(self):
         fg_color=colors.disconnect,
         hover_color=colors.disconnect_hover,
     )
+    self.mqttTitle = ctk.CTkLabel(self.frame, text='Connect to the MQTT broker', font=fonts.header)
+
+def mqtt_setup(self):
+    self.clear_frame()
+    self.mqttTitle.grid(row=0, column=0, columnspan=4, pady=100)
+    self.hostLabel.grid(row=1, column=0, padx=10, sticky=tk.W)
+    self.hostEntry.grid(row=2, column=0, padx=10)
+    self.portLabel.grid(row=1, column=1, padx=10, sticky=tk.W)
+    self.portEntry.grid(row=2, column=1, padx=10)
+    self.unameLabel.grid(row=3, column=0, padx=10, pady=(50, 2), sticky=tk.W)
+    self.unameEntry.grid(row=4, column=0, padx=10)
+    self.pwLabel.grid(row=5, column=0, padx=10, pady=(20, 2), sticky=tk.W)
+    self.pwEntry.grid(row=6, column=0, padx=10)
     if not self.connected:
-        connectButton.grid()  # .pack(side=tk.BOTTOM, padx=10, pady=20)
+        self.connectButton.grid(row=8, column=0, columnspan=4, pady=100)
     else:
-        disconnectButton.grid()  # .pack(side=tk.BOTTOM, padx=10, pady=20)
-
-
+        self.disconnectButton.grid(row=8, column=0, columnspan=4, pady=100)
 #  self.frame   ----> categories widget
 
 
@@ -161,10 +176,12 @@ def radio_config_create(self):
     # self.clear_frame()
 
     # Frame Title
-    self.radioTitle = ctk.CTkLabel(self.frame, text="Radio Config", font=fonts.header)
+    self.radioTitle = ctk.CTkLabel(
+        self.frame, text="Radio Config", font=fonts.header)
 
     # FREQUENCY ===================================
-    self.freqLabel = ctk.CTkLabel(self.frame, text="Frequency", font=fonts.label)
+    self.freqLabel = ctk.CTkLabel(
+        self.frame, text="Frequency", font=fonts.label)
 
     self.freqRange = ctk.CTkLabel(
         self.frame,
@@ -190,7 +207,8 @@ def radio_config_create(self):
 
     freqSV = tk.StringVar()
     freqSV.trace("w", lambda name, index, mode, sv=freqSV: set_freq(freqSV))
-    self.freqEntry = ctk.CTkEntry(self.frame, font=fonts.entry, textvariable=freqSV)
+    self.freqEntry = ctk.CTkEntry(
+        self.frame, font=fonts.entry, textvariable=freqSV)
     self.freqEntry.insert(0, self.values.freq)
     self.freqEntry.bind(command=set_freq)
 
@@ -231,7 +249,8 @@ def radio_config_create(self):
     self.bwOption = ctk.CTkOptionMenu(
         self.frame, values=list(bwopts.keys()), command=set_bw
     )
-    self.bwOption.set(list(bwopts)[list(bwopts.values()).index(self.values.bw)])
+    self.bwOption.set(
+        list(bwopts)[list(bwopts.values()).index(self.values.bw)])
 
     # CODE RATE =========================================
     self.crLabel = ctk.CTkLabel(self.frame, text="Code Rate", font=fonts.label)
@@ -244,10 +263,12 @@ def radio_config_create(self):
     self.crOption = ctk.CTkOptionMenu(
         self.frame, values=list(cropts.keys()), command=set_cr
     )
-    self.crOption.set(list(cropts)[list(cropts.values()).index(self.values.cr)])
+    self.crOption.set(
+        list(cropts)[list(cropts.values()).index(self.values.cr)])
 
     # PREAMBLE LENGTH ===================================
-    self.plenLabel = ctk.CTkLabel(self.frame, text="Preamble Length", font=fonts.label)
+    self.plenLabel = ctk.CTkLabel(
+        self.frame, text="Preamble Length", font=fonts.label)
 
     self.plenRange = ctk.CTkLabel(
         self.frame, text="(3 - 65536)", font=fonts.units, text_color=colors.units
@@ -280,14 +301,16 @@ def radio_config_create(self):
         self.values.sf = value
         mqttC.publish(Topics.sf, self.values.sf)
 
-    self.sfLabel = ctk.CTkLabel(self.frame, text="Spreading Factor", font=fonts.label)
+    self.sfLabel = ctk.CTkLabel(
+        self.frame, text="Spreading Factor", font=fonts.label)
     self.sfSegmented = ctk.CTkSegmentedButton(
         self.frame, values=range(7, 12 + 1), command=sfCallback
     )
     self.sfSegmented.set(self.values.sf)
 
     # TX POWER ========================================
-    self.txpwrLabel = ctk.CTkLabel(self.frame, text="Tx Power", font=fonts.label)
+    self.txpwrLabel = ctk.CTkLabel(
+        self.frame, text="Tx Power", font=fonts.label)
 
     def slider_event(value):
         self.txpwrValue.configure(text=f"{int(value)} dBm")
@@ -327,7 +350,8 @@ def radio_config_create(self):
     self.lnaSlider.set(self.values.lna_gain)
 
     # ACKNOWLEDGE =====================================
-    self.ackdLabel = ctk.CTkLabel(self.frame, text="ACK Delay", font=fonts.label)
+    self.ackdLabel = ctk.CTkLabel(
+        self.frame, text="ACK Delay", font=fonts.label)
 
     def set_ackdelay(sv):
         val = to_float(sv.get())
@@ -339,7 +363,8 @@ def radio_config_create(self):
         mqttC.publish(Topics.ackdelay, self.values.ack_delay)
 
     ackdSV = tk.StringVar()
-    ackdSV.trace("w", lambda name, index, mode, sv=ackdSV: set_ackdelay(ackdSV))
+    ackdSV.trace("w", lambda name, index, mode,
+                 sv=ackdSV: set_ackdelay(ackdSV))
     self.ackdelayEntry = ctk.CTkEntry(
         self.frame, font=fonts.entry, width=100, textvariable=ackdSV
     )
@@ -348,7 +373,8 @@ def radio_config_create(self):
         self.frame, text="s", font=fonts.units, text_color=colors.units
     )
 
-    self.ackwLabel = ctk.CTkLabel(self.frame, text="ACK Wait", font=fonts.label)
+    self.ackwLabel = ctk.CTkLabel(
+        self.frame, text="ACK Wait", font=fonts.label)
 
     def set_ackwait(sv):
         val = to_float(sv.get())
@@ -369,7 +395,8 @@ def radio_config_create(self):
         self.frame, text="s", font=fonts.units, text_color=colors.units
     )
     # RX TIMEOUT ======================================
-    self.rxtoLabel = ctk.CTkLabel(self.frame, text="Rx Timeout", font=fonts.label)
+    self.rxtoLabel = ctk.CTkLabel(
+        self.frame, text="Rx Timeout", font=fonts.label)
 
     def set_rxtimeout(sv):
         val = to_float(sv.get())
@@ -382,7 +409,8 @@ def radio_config_create(self):
         mqttC.publish(Topics.rxto, self.values.rx_timeout)
 
     rxtoSV = tk.StringVar()
-    rxtoSV.trace("w", lambda name, index, mode, sv=rxtoSV: set_rxtimeout(rxtoSV))
+    rxtoSV.trace("w", lambda name, index, mode,
+                 sv=rxtoSV: set_rxtimeout(rxtoSV))
     self.rxtoEntry = ctk.CTkEntry(
         self.frame, font=fonts.entry, width=100, textvariable=rxtoSV
     )
@@ -397,7 +425,8 @@ def radio_config_create(self):
         self.values.chksum = has_chksum.get()
         mqttC.publish(Topics.chksum, self.values.chksum)
 
-    self.chksumLabel = ctk.CTkLabel(self.frame, text="Checksum", font=fonts.label)
+    self.chksumLabel = ctk.CTkLabel(
+        self.frame, text="Checksum", font=fonts.label)
     has_chksum = ctk.StringVar(value=True)
     self.chksumSwitch = ctk.CTkSwitch(
         self.frame,
@@ -480,7 +509,7 @@ def radio_config(self):
     self.chksumSwitch.grid(
         row=10, column=1, padx=10, pady=20, sticky=tk.E
     )
-    self.button.grid(row=11, column=1, padx=(10, 10), pady=20 , columnspan=5)
+    self.button.grid(row=11, column=1, padx=(10, 10), pady=20, columnspan=5)
 
 
 # ===================================================
@@ -495,7 +524,8 @@ def change_scaling_event(new_scaling):
 def view(self):
     """edit UI"""
     self.clear_frame()
-    self.scaling_label = ctk.CTkLabel(self.frame, text="UI Scaling:", anchor="w")
+    self.scaling_label = ctk.CTkLabel(
+        self.frame, text="UI Scaling:", anchor="w")
     self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
 
     self.scaling_optionemenu = ctk.CTkOptionMenu(
@@ -507,6 +537,8 @@ def view(self):
 
 #     self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20), sticky="s")    self.scaling_optionemenu.grid(
 #         row=8, column=0, padx=20, pady=(10, 20), sticky="s")
+# TODO: Change theme
+# TODO: Change theme
 # TODO: Change theme
 # TODO: Change theme
 # TODO: Change theme
