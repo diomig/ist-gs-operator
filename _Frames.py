@@ -25,32 +25,15 @@ def dash(self):
     """Dashboard widget"""
     self.clear_frame()
     # ctk.CTkLabel...
-    telemetryBox = ctk.CTkLabel(
+    self.telemetryBox = ctk.CTkLabel(
         self.frame,
-        text=telemetry,
+        text=self.telemetry,
     )
-    telemetryBox.grid()
-    #     print(telemetry)
-    return telemetryBox
+    self.telemetryBox.grid()
 
 
 #  self.frame   ----> statement widget
 
-
-# def update_telemetryBox(telemetry, msg):
-#     new = f"\n{msg.topic}: {msg.payload.decode()}"
-#     telemetry += new
-#
-#
-# def on_message(client, userdata, msg):
-#     print(f"Received message on {msg.topic}: {msg.payload.decode()}")
-#     # previous = self.telemetryBox.get()
-#     # new = f"{msg.topic}: {msg.payload.decode()}"
-#     # self.telemetryBox.configure(text=f"{previous}\n{new}")
-#     update_telemetryBox(telemetry, msg)
-#
-#
-# mqttC.on_message = on_message
 
 
 def mqtt_setup_create(self):

@@ -136,11 +136,11 @@ class App(customtkinter.CTk):
         """Dashboard widget"""
         self.clear_frame()
         # ctk.CTkLabel...
-        telemetryBox = customtkinter.CTkLabel(
+        self.telemetryBox = customtkinter.CTkLabel(
             self.frame,
             text=self.telemetry,
         )
-        telemetryBox.grid()
+        self.telemetryBox.grid()
         print(self.telemetry)
 
     def mqtt_setup(self):
@@ -173,13 +173,14 @@ a = App()
 def update_telemetryBox(app, msg):
     new = f"\n{msg.topic}: {msg.payload.decode()}"
     app.telemetry += new
-
+    app.telemetryBox.configure(text=app.telemetry)
 
 def on_message(client, userdata, msg):
     print(f"Received message on {msg.topic}: {msg.payload.decode()}")
     # previous = self.telemetryBox.get()
     # new = f"{msg.topic}: {msg.payload.decode()}"
     # self.telemetryBox.configure(text=f"{previous}\n{new}")
+    telemetry = msg.payload.decode()
     update_telemetryBox(a, msg)
 
 
