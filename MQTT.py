@@ -2,23 +2,28 @@ import paho.mqtt.client as mqtt_client
 
 globalName = "myGS/"
 
+
 class Topics:
-    freq = f'{globalName}radio/freq'
-    bw = f'{globalName}radio/bw'
-    cr = f'{globalName}radio/cr'
-    plen = f'{globalName}radio/plen'
-    sf = f'{globalName}radio/sf'
-    txpwr = f'{globalName}radio/txpwr'
-    lnag = f'{globalName}radio/lnag'
-    chksum = f'{globalName}radio/chksum'
-    ackdelay = f'{globalName}radio/ackd'
-    ackwait = f'{globalName}radio/ackw'
-    rxto = f'{globalName}radio/rxto'
+    freq = f"{globalName}radio/freq"
+    bw = f"{globalName}radio/bw"
+    cr = f"{globalName}radio/cr"
+    plen = f"{globalName}radio/plen"
+    sf = f"{globalName}radio/sf"
+    txpwr = f"{globalName}radio/txpwr"
+    lnag = f"{globalName}radio/lnag"
+    chksum = f"{globalName}radio/chksum"
+    ackdelay = f"{globalName}radio/ackd"
+    ackwait = f"{globalName}radio/ackw"
+    rxto = f"{globalName}radio/rxto"
 
 
 # Define the MQTT topics
-pub_topics = ["radio/freq", "radio/bw", "radio/br", "radio/chksum", "msg/cmd"]
-sub_topics = ["msg/telemetry", "msg/payload", "msg/reply"]
+# pub_topics = ["radio/freq", "radio/bw", "radio/br", "radio/chksum", "msg/cmd"]
+sub_topics = [
+    f"{globalName}msg/telemetry",
+    f"{globalName}msg/payload",
+    f"{globalName}msg/reply",
+]
 
 # Define the MQTT broker address and port
 # broker_address = "10.42.0.236"
@@ -33,8 +38,8 @@ def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     # Subscribe to all topics
     for topic in sub_topics:
-        print(globalName + topic)
-        client.subscribe(globalName + topic)
+        print(topic)
+        client.subscribe(topic)
 
 
 # Define the on_message callback function
