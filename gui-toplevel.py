@@ -39,14 +39,25 @@ class App(customtkinter.CTk):
         self.telemetry = "..."
         # root!
         self.main_container = customtkinter.CTkFrame(self, corner_radius=10)
-        self.main_container.pack(fill=tkinter.BOTH, expand=True, padx=10, pady=10)
+        self.main_container.pack(
+            fill=tkinter.BOTH,
+            expand=True,
+            padx=10,
+            pady=10,
+        )
 
         # left side panel -> for frame selection
         self.left_side_panel = customtkinter.CTkFrame(
-            self.main_container, width=150, corner_radius=10
+            self.main_container,
+            width=150,
+            corner_radius=10,
         )
         self.left_side_panel.pack(
-            side=tkinter.LEFT, fill=tkinter.Y, expand=False, padx=5, pady=5
+            side=tkinter.LEFT,
+            fill=tkinter.Y,
+            expand=False,
+            padx=5,
+            pady=5,
         )
 
         self.left_side_panel.grid_columnconfigure(0, weight=1)
@@ -98,7 +109,11 @@ class App(customtkinter.CTk):
             corner_radius=10,
         )
         self.right_side_panel.pack(
-            side=tkinter.LEFT, fill=tkinter.BOTH, expand=True, padx=5, pady=5
+            side=tkinter.LEFT,
+            fill=tkinter.BOTH,
+            expand=True,
+            padx=5,
+            pady=5,
         )
 
         self.frame = customtkinter.CTkFrame(
@@ -120,28 +135,12 @@ class App(customtkinter.CTk):
         # MQTT setup is the first thing that appears
         _Frames.mqtt_setup(self)
 
-    def update_telemetryBox(telemetry, msg):
-        new = f"\n{msg.topic}: {msg.payload.decode()}"
-        telemetry += new
-
-    #     def on_message(client, userdata, msg):
-    #         print(f"Received message on {msg.topic}: {msg.payload.decode()}")
-    #         # previous = self.telemetryBox.get()
-    #         # new = f"{msg.topic}: {msg.payload.decode()}"
-    #         # self.telemetryBox.configure(text=f"{previous}\n{new}")
-    #         update_telemetryBox(telemetry, msg)
+#     def update_telemetryBox(telemetry, msg):
+#         new = f"\n{msg.topic}: {msg.payload.decode()}"
+#         telemetry += new
 
     def dash(self):
-        # self.telemetryBox = _Frames.dash(self)
-        """Dashboard widget"""
-        self.clear_frame()
-        # ctk.CTkLabel...
-        self.telemetryBox = customtkinter.CTkLabel(
-            self.frame,
-            text=self.telemetry,
-        )
-        self.telemetryBox.grid()
-        print(self.telemetry)
+        _Frames.dash(self)
 
     def mqtt_setup(self):
         _Frames.mqtt_setup(self)
@@ -163,7 +162,6 @@ class App(customtkinter.CTk):
     # CLEAR ALL THE WIDGET BEFORE loading the widget of the concerned page
     def clear_frame(self):
         for widget in self.frame.winfo_children():
-            # widget.destroy()
             widget.grid_forget()
 
 
@@ -173,14 +171,12 @@ a = App()
 def update_telemetryBox(app, msg):
     new = f"\n{msg.topic}: {msg.payload.decode()}"
     app.telemetry += new
-    app.telemetryBox.configure(text=app.telemetry)
+    app.telemetryBox.insert('end', app.telemetry)
+
 
 def on_message(client, userdata, msg):
-    print(f"Received message on {msg.topic}: {msg.payload.decode()}")
-    # previous = self.telemetryBox.get()
-    # new = f"{msg.topic}: {msg.payload.decode()}"
-    # self.telemetryBox.configure(text=f"{previous}\n{new}")
     telemetry = msg.payload.decode()
+    print(f"Received message on {msg.topic}: {telemetry}")
     update_telemetryBox(a, msg)
 
 
