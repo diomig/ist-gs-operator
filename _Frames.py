@@ -1,6 +1,9 @@
 import tkinter as tk
 
 import customtkinter as ctk
+import matplotlib.backends.backend_tkagg as tkagg  # import FigureCanvasTkAgg
+import numpy as np
+from matplotlib.figure import Figure
 
 from MQTT import Topics, mqttC
 from utils import colors, fonts
@@ -165,13 +168,64 @@ def mqtt_setup(self):
 def categories(self):
     """Categories Management Widget"""
     self.clear_frame()
-    self.bt_from_frame4 = ctk.CTkButton(
-        self.frame, text="categories", command=lambda: print("test cats")
-    )
-    self.bt_from_frame4.grid(row=0, column=0, padx=20, pady=(10, 0))
+    # ----------------------------------------------------------------
+    r = np.arange(0, 2, 0.01)
+    theta = 2 * np.pi * r
+    fig = Figure(figsize=(5, 4), dpi=100)
+    self.ax = fig.add_subplot(projection="polar")
+    self.ax.plot(np.pi, 1, marker="x")
+    # ax.set_rmax(2)
+    # ax.set_rticks([0.5, 1, 1.5, 2])  # Less radial ticks
+    # ax.set_rlabel_position(-22.5)  # Move radial labels away from plotted line
+    self.ax.grid(True)
+    self.canvas = tkagg.FigureCanvasTkAgg(fig, master=self.frame)
+    self.canvas.draw()
+    self.canvas.get_tk_widget().grid()
 
+    def create_controls(self):
+        # Frame to hold the controls
+        control_frame = ctk.CTkFrame(self.frame)
+        control_frame.grid()
+
+        # Entry for r
+        ctk.CTkLabel(control_frame, text="r:").grid()
+        self.r_entry = ctk.CTkEntry(control_frame, width=100)
+        self.r_entry.grid()
+
+        # Entry for theta
+        ctk.CTkLabel(control_frame, text="θ (degrees):").grid()
+        self.theta_entry = ctk.CTkEntry(control_frame, width=100)
+        self.theta_entry.grid()
+
+        # Button to update the marker
+        update_button = ctk.CTkButton(
+            control_frame, text="Update Marker", command=update_marker
+        )
+        update_button.grid()
+
+    def update_marker():
+        try:
+            # Get the values from the entries
+            r = float(self.r_entry.get())
+            # Convert degrees to radians
+            theta = np.radians(float(self.theta_entry.get()))
+
+            # Update the marker position
+            self.ax.plot(theta, r, marker='o')
+            self.canvas.draw()
+
+        except ValueError:
+            # Handle invalid input
+            print("Please enter valid numeric values for r and θ.")
+
+    create_controls(self)
+
+
+# ----------------------------------------------------------------
 
 #   self.frame ----> GS config
+
+
 def radio_config_create(self):
     """Ground Station Configuration Widget"""
     # Frame Title
