@@ -4,7 +4,7 @@ class fonts:
     units = ("Roboto", 16)
     entry = ("calibri", 14)
     button = ("SF Pro Display", 17)
-    indicator = ('Roboto', 18, 'bold')
+    indicator = ("Roboto", 18, "bold")
 
 
 class colors:
@@ -12,8 +12,9 @@ class colors:
     failed = "#d18984"
     red = "#ea0000"
     red_hover = "#b20000"
-    units = '#687078'
+    units = "#687078"
     border = ["#979DA2", "#565B5E"]
-    disconnect = '#d9580d'
-    disconnect_hover = '#913b09'
-    bg = '#000811'
+    disconnect = "#d9580d"
+    disconnect_hover = "#913b09"
+    bg = "#282828"
+    transparent = "#00000000"
