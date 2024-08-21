@@ -2,6 +2,7 @@ import tkinter as tk
 
 import customtkinter as ctk
 import matplotlib.backends.backend_tkagg as tkagg  # import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
@@ -169,19 +170,35 @@ def categories(self):
     """Categories Management Widget"""
     self.clear_frame()
     # ----------------------------------------------------------------
-    r = np.arange(0, 2, 0.01)
-    theta = 2 * np.pi * r
+#     r = np.arange(0, 2, 0.01)
+#     theta = 2 * np.pi * r
     fig = Figure(figsize=(5, 4), dpi=100)
+    fig.patch.set_facecolor(colors.transparent)  # colors.bg)
     self.ax = fig.add_subplot(projection="polar")
-    self.ax.plot(np.pi, 1, marker="x")
-    # ax.set_rmax(2)
-    # ax.set_rticks([0.5, 1, 1.5, 2])  # Less radial ticks
-    # ax.set_rlabel_position(-22.5)  # Move radial labels away from plotted line
+    # NOTE: this is how you plot
+    # self.ax.plot(np.pi, 1, marker="x")
+    self.ax.set_rmax(90)
+    self.ax.set_ylim(0, 90)
+    # HACK: don't forget that elevation goes the other way around
+    # 90º -> 0º inside-out
+    # so, r = 90 - el
+    self.ax.set_rticks([0, 30, 60, 90])  # Less radial ticks
+    # Move radial labels away from plotted line
+    self.ax.set_rlabel_position(-22.5)
     self.ax.grid(True)
+
+    #     ticks = np.pi/180. * np.linspace(180,  -180, 8, endpoint=False)
+    #     self.ax.set_xticks(ticks)
+    self.ax.set_xticks([0, np.pi / 2, np.pi, 3 * np.pi / 2]
+                       )  # Positions for N, E, S, W
+    self.ax.set_xticklabels(["E", "N", "W", "S"])  # Labels for the ticks
+    self.ax.tick_params(axis="x", colors="white")
     self.canvas = tkagg.FigureCanvasTkAgg(fig, master=self.frame)
+    self.canvas.get_tk_widget().configure(bg=colors.bg)
     self.canvas.draw()
     self.canvas.get_tk_widget().grid()
 
+    # ++++++++++++++++++++++++ JUST FOR TESTING ++++++++++++++++++++++++++++++
     def create_controls(self):
         # Frame to hold the controls
         control_frame = ctk.CTkFrame(self.frame)
@@ -211,7 +228,7 @@ def categories(self):
             theta = np.radians(float(self.theta_entry.get()))
 
             # Update the marker position
-            self.ax.plot(theta, r, marker='o')
+            self.ax.plot(theta, r, marker="o")
             self.canvas.draw()
 
         except ValueError:
