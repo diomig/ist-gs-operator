@@ -118,7 +118,8 @@ class App(customtkinter.CTk):
 
         self.frame = customtkinter.CTkFrame(
             self.main_container,
-            corner_radius=10,  # fg_color=colors.bg
+            corner_radius=10,
+            fg_color=colors.bg,
         )
         self.frame.pack(
             in_=self.right_side_panel,
