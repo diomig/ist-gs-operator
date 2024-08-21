@@ -21,3 +21,10 @@ class Default:
     port = ''
     usr = ''
     pw = ''
+
+    rotport = 'localhost'
+    rotport = '4535'
+    rotmodel = '1901'
+    rotdevice = '/dev/ttyUSB0'
+    sspeed = 115200
+    daemoncmd = 'rotctld'
