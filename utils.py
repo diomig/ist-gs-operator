@@ -5,6 +5,7 @@ class fonts:
     entry = ("calibri", 14)
     button = ("SF Pro Display", 17)
     indicator = ("Roboto", 18, "bold")
+    listbox = 'TkFixedFont'
 
 
 class colors:
