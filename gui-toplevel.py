@@ -2,8 +2,9 @@ import tkinter
 
 import customtkinter as ctk
 
-import _Frames
 from defaults import Default
+from Frames import (Dashboard, DecoderConfig, MQTTSetup, Preferences,
+                    RadioConfig, RotConfig)
 from MQTT import mqttC
 from utils import colors, fonts
 
@@ -19,10 +20,10 @@ class App(ctk.CTk):
         pages = {
             "Dashboard": self.dash,
             "MQTT Setup": self.mqtt_setup,
-            "Data Request": self.categories,
+            #             "Data Request": self.categories,
             "Radio Config": self.radio_config,
             "Rotator Config": self.rot_config,
-            "Decoders": lambda: print("Decoders"),
+            "Decoders": self.decoders,
             "View": self.view,
         }
         super().__init__()
@@ -130,35 +131,37 @@ class App(ctk.CTk):
             pady=0,
         )
 
-        _Frames.mqtt_setup_create(self)
-        _Frames.radio_config_create(self)
-        _Frames.rot_config_create(self)
-
+        MQTTSetup.mqtt_setup_create(self)
+        RadioConfig.radio_config_create(self)
+        RotConfig.rot_config_create(self)
 
         # MQTT setup is the first thing that appears
-        _Frames.mqtt_setup(self)
+        MQTTSetup.mqtt_setup(self)
 
     #     def update_telemetryBox(telemetry, msg):
     #         new = f"\n{msg.topic}: {msg.payload.decode()}"
     #         telemetry += new
 
     def dash(self):
-        _Frames.dash(self)
+        Dashboard.dash(self)
 
     def mqtt_setup(self):
-        _Frames.mqtt_setup(self)
+        MQTTSetup.mqtt_setup(self)
 
-    def categories(self):
-        _Frames.categories(self)
+#     def categories(self):
+#         _Frames.categories(self)
 
     def radio_config(self):
-        _Frames.radio_config(self)
+        RadioConfig.radio_config(self)
 
     def rot_config(self):
-        _Frames.rot_config(self)
+        RotConfig.rot_config(self)
+
+    def decoders(self):
+        DecoderConfig.decoders(self)
 
     def view(self):
-        _Frames.view(self)
+        Preferences.view(self)
 
     # close the entire window
 
