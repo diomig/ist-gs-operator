@@ -22,7 +22,7 @@ class Default:
     usr = ''
     pw = ''
 
-    rotport = 'localhost'
+    rothost = 'localhost'
     rotport = '4535'
     rotmodel = '1901'
     rotdevice = '/dev/ttyUSB0'
