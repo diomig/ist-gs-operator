@@ -1,5 +1,6 @@
 import tkinter as tk
 
+import CTkListbox
 import customtkinter as ctk
 import matplotlib.backends.backend_tkagg as tkagg  # import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
@@ -40,6 +41,70 @@ def dash(self):
     )
     #     self.telemetryBox.insert('0.0', 'new telemetry message')
     #     self.telemetryBox.configure(state='disabled')
+
+    fig = Figure(figsize=(5, 4), dpi=100)
+    fig.patch.set_facecolor(colors.transparent)  # colors.bg)
+    self.ax = fig.add_subplot(projection="polar")
+    # NOTE: this is how you plot
+    # self.ax.plot(np.pi, 1, marker="x")
+    self.ax.set_rmax(90)
+    self.ax.set_ylim(0, 90)
+    # HACK: don't forget that elevation goes the other way around
+    # 90º -> 0º inside-out
+    # so, r = 90 - el
+    self.ax.set_rticks([0, 30, 60, 90])  # Less radial ticks
+    # Move radial labels away from plotted line
+    self.ax.set_rlabel_position(-22.5)
+    self.ax.grid(True)
+
+    #     ticks = np.pi/180. * np.linspace(180,  -180, 8, endpoint=False)
+    #     self.ax.set_xticks(ticks)
+    self.ax.set_xticks([0, np.pi / 2, np.pi, 3 * np.pi / 2])  # Positions for N, E, S, W
+    self.ax.set_xticklabels(["E", "N", "W", "S"])  # Labels for the ticks
+    self.ax.tick_params(axis="x", colors="white")
+    self.canvas = tkagg.FigureCanvasTkAgg(fig, master=self.frame)
+    self.canvas.get_tk_widget().configure(bg=colors.bg)
+    self.canvas.draw()
+    self.canvas.get_tk_widget().grid()
+
+    # ++++++++++++++++++++++++ JUST FOR TESTING ++++++++++++++++++++++++++++++
+    def create_controls(self):
+        # Frame to hold the controls
+        control_frame = ctk.CTkFrame(self.frame)
+        control_frame.grid()
+
+        # Entry for r
+        ctk.CTkLabel(control_frame, text="r:").grid()
+        self.r_entry = ctk.CTkEntry(control_frame, width=100)
+        self.r_entry.grid()
+
+        # Entry for theta
+        ctk.CTkLabel(control_frame, text="θ (degrees):").grid()
+        self.theta_entry = ctk.CTkEntry(control_frame, width=100)
+        self.theta_entry.grid()
+
+        # Button to update the marker
+        update_button = ctk.CTkButton(
+            control_frame, text="Update Marker", command=update_marker
+        )
+        update_button.grid()
+
+    def update_marker():
+        try:
+            # Get the values from the entries
+            r = float(self.r_entry.get())
+            # Convert degrees to radians
+            theta = np.radians(float(self.theta_entry.get()))
+
+            # Update the marker position
+            self.ax.plot(theta, r, marker="o")
+            self.canvas.draw()
+
+        except ValueError:
+            # Handle invalid input
+            print("Please enter valid numeric values for r and θ.")
+
+    create_controls(self)
 
     self.tlmLabel.grid()
     self.telemetryBox.grid()
@@ -170,72 +235,8 @@ def categories(self):
     """Categories Management Widget"""
     self.clear_frame()
     # ----------------------------------------------------------------
-#     r = np.arange(0, 2, 0.01)
-#     theta = 2 * np.pi * r
-    fig = Figure(figsize=(5, 4), dpi=100)
-    fig.patch.set_facecolor(colors.transparent)  # colors.bg)
-    self.ax = fig.add_subplot(projection="polar")
-    # NOTE: this is how you plot
-    # self.ax.plot(np.pi, 1, marker="x")
-    self.ax.set_rmax(90)
-    self.ax.set_ylim(0, 90)
-    # HACK: don't forget that elevation goes the other way around
-    # 90º -> 0º inside-out
-    # so, r = 90 - el
-    self.ax.set_rticks([0, 30, 60, 90])  # Less radial ticks
-    # Move radial labels away from plotted line
-    self.ax.set_rlabel_position(-22.5)
-    self.ax.grid(True)
-
-    #     ticks = np.pi/180. * np.linspace(180,  -180, 8, endpoint=False)
-    #     self.ax.set_xticks(ticks)
-    self.ax.set_xticks([0, np.pi / 2, np.pi, 3 * np.pi / 2]
-                       )  # Positions for N, E, S, W
-    self.ax.set_xticklabels(["E", "N", "W", "S"])  # Labels for the ticks
-    self.ax.tick_params(axis="x", colors="white")
-    self.canvas = tkagg.FigureCanvasTkAgg(fig, master=self.frame)
-    self.canvas.get_tk_widget().configure(bg=colors.bg)
-    self.canvas.draw()
-    self.canvas.get_tk_widget().grid()
-
-    # ++++++++++++++++++++++++ JUST FOR TESTING ++++++++++++++++++++++++++++++
-    def create_controls(self):
-        # Frame to hold the controls
-        control_frame = ctk.CTkFrame(self.frame)
-        control_frame.grid()
-
-        # Entry for r
-        ctk.CTkLabel(control_frame, text="r:").grid()
-        self.r_entry = ctk.CTkEntry(control_frame, width=100)
-        self.r_entry.grid()
-
-        # Entry for theta
-        ctk.CTkLabel(control_frame, text="θ (degrees):").grid()
-        self.theta_entry = ctk.CTkEntry(control_frame, width=100)
-        self.theta_entry.grid()
-
-        # Button to update the marker
-        update_button = ctk.CTkButton(
-            control_frame, text="Update Marker", command=update_marker
-        )
-        update_button.grid()
-
-    def update_marker():
-        try:
-            # Get the values from the entries
-            r = float(self.r_entry.get())
-            # Convert degrees to radians
-            theta = np.radians(float(self.theta_entry.get()))
-
-            # Update the marker position
-            self.ax.plot(theta, r, marker="o")
-            self.canvas.draw()
-
-        except ValueError:
-            # Handle invalid input
-            print("Please enter valid numeric values for r and θ.")
-
-    create_controls(self)
+    #     r = np.arange(0, 2, 0.01)
+    #     theta = 2 * np.pi * r
 
 
 # ----------------------------------------------------------------
@@ -638,6 +639,171 @@ def radio_config(self):
     self.chksumLabel.grid(row=10, column=0, padx=10, pady=20, sticky=tk.E)
     self.chksumSwitch.grid(row=10, column=1, padx=10, pady=20, sticky=tk.E)
     self.button.grid(row=11, column=1, padx=(10, 10), pady=20, columnspan=5)
+
+
+# ===================================================
+
+
+def rot_config_create(self):
+
+    def update(data):
+        # Clear the listbox
+        self.my_list.delete(0, tk.END)
+
+        # Add modelopts to listbox
+        for item in data:
+            self.my_list.insert(tk.END, item)
+
+    # Update entry box with listbox clicked
+    def fillout(e):
+        # Delete whatever is in the entry box
+        self.my_entry.delete(0, tk.END)
+
+        # Add clicked list item to entry box
+        selected = self.my_list.get(tk.ANCHOR)
+        self.my_entry.insert(0, "  ".join(selected.split()))
+        self.modelselectLabel.grid(row=3, column=1, padx=30, sticky=tk.E)
+        self.rotmodel = selected.split()[0]
+        print("Rotator model: ", self.rotmodel)
+
+    # Create function to check entry vs listbox
+    def check(e):
+        # grab what was typed
+        typed = self.my_entry.get()
+        self.modelselectLabel.grid_forget()
+        if typed == "":
+            data = modelopts
+        else:
+            data = []
+            for item in modelopts:
+                if typed.lower() in item.lower():
+                    data.append(item)
+
+        # update our listbox with selected items
+        update(data)
+
+    # Create a label
+    self.rotmodelLabel = ctk.CTkLabel(
+        self.frame,
+        text="Rotator Model",
+        font=fonts.label,
+    )
+
+    # Create an entry box
+    self.my_entry = ctk.CTkEntry(
+        self.frame,
+        font=fonts.entry,
+        width=500,
+    )
+
+    self.modelselectLabel = ctk.CTkLabel(
+        self.frame,
+        text="✔️",
+        text_color="green",
+        font=fonts.label,
+    )
+
+    # Create a listbox
+    self.my_list = tk.Listbox(
+        self.frame,
+        width=70,
+        bg=colors.bg,
+        fg="#ffffff",
+        highlightcolor="#666666",
+        font=fonts.listbox,
+        # Selectbackground="#aaaaaa",
+    )
+    #     self.my_list = CTkListbox.CTkListbox(  # tk.Listbox(
+    #         self.frame,
+    #         width=500,
+    #         height=300,
+    #     )
+
+    # Create a list of pizza modelopts
+    #     modelopts = ["Pepperoni", "Peppers", "Mushrooms", "Cheese", "Onions", "Ham", "Taco"]
+    modelopts = open("hamlib-rotators.txt", "r").read().splitlines()
+    # Add the modelopts to our list
+    update(modelopts)
+
+    # Create a binding on the listbox onclick
+    self.my_list.bind("<<ListboxSelect>>", fillout)
+
+    # Create a binding on the entry box
+    self.my_entry.bind("<KeyRelease>", check)
+
+    self.rothostLabel = ctk.CTkLabel(
+        self.frame,
+        text="Host",
+        font=fonts.label,
+    )
+    self.rothostEntry = ctk.CTkEntry(
+        self.frame,
+        width=300,
+    )
+    self.rothostEntry.insert(0, self.values.rothost)
+    self.colon = ctk.CTkLabel(
+        self.frame,
+        text=":",
+        font=fonts.label,
+    )
+    self.rotportLabel = ctk.CTkLabel(
+        self.frame,
+        text="Port",
+        font=fonts.label,
+    )
+    self.rotportEntry = ctk.CTkEntry(
+        self.frame,
+        width=100,
+    )
+    self.rotportEntry.insert(0, self.values.rotport)
+
+    self.rotdevLabel = ctk.CTkLabel(
+        self.frame,
+        text="Device",
+        font=fonts.label,
+    )
+    self.rotdevEntry = ctk.CTkEntry(
+        self.frame,
+        width=200,
+    )
+    self.rotdevEntry.insert(0, self.values.rotdevice)
+
+    self.rotbaudLabel = ctk.CTkLabel(
+        self.frame,
+        text="Serial speed/baudrate",
+        font=fonts.label,
+    )
+    self.rotbaudEntry = ctk.CTkEntry(
+        self.frame,
+        width=100,
+    )
+    self.rotbaudEntry.insert(0, self.values.sspeed)
+
+    def model_index(rots, num):
+        for i, rot in enumerate(rots):
+            if rot.split()[0] == num:
+                return i
+        return 0
+
+    index = model_index(modelopts, self.values.rotmodel)
+    self.my_list.selection_set(index)
+    self.my_list.yview_scroll(index - 3, "units")
+
+
+def rot_config(self):
+    self.clear_frame()
+    self.rotmodelLabel.grid(row=2, column=0, pady=(50, 5))
+    self.my_entry.grid(row=3, column=0, padx=40, columnspan=3)
+    self.my_list.grid(row=4, column=0, padx=40, pady=5, columnspan=3)
+    self.rothostLabel.grid(row=6, column=0, padx=50, pady=(40, 5), sticky="W")
+    self.rothostEntry.grid(row=7, column=0, padx=(50, 40), sticky="W")
+    self.colon.grid(row=7, column=0, padx=10, sticky="E")
+    self.rotportLabel.grid(row=6, column=1, padx=10, pady=(40, 5), sticky="W")
+    self.rotportEntry.grid(row=7, column=1, padx=10, sticky="W")
+    self.rotdevLabel.grid(row=8, column=0, padx=50, pady=(40, 5), sticky="W")
+    self.rotdevEntry.grid(row=9, column=0, padx=50, sticky="W")
+    self.rotbaudLabel.grid(row=8, column=1, padx=10, pady=(40, 5), sticky="W")
+    self.rotbaudEntry.grid(row=9, column=1, padx=10, sticky="W")
 
 
 # ===================================================

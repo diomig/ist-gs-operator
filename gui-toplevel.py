@@ -1,6 +1,6 @@
 import tkinter
 
-import customtkinter
+import customtkinter as ctk
 
 import _Frames
 from defaults import Default
@@ -8,11 +8,11 @@ from MQTT import mqttC
 from utils import colors, fonts
 
 DARK_MODE = "dark"
-customtkinter.set_appearance_mode(DARK_MODE)
-customtkinter.set_default_color_theme("dark-blue")
+ctk.set_appearance_mode(DARK_MODE)
+ctk.set_default_color_theme("dark-blue")
 
 
-class App(customtkinter.CTk):
+class App(ctk.CTk):
 
     def __init__(self):
 
@@ -21,7 +21,7 @@ class App(customtkinter.CTk):
             "MQTT Setup": self.mqtt_setup,
             "Data Request": self.categories,
             "Radio Config": self.radio_config,
-            "Rotator Config": lambda: print("rot config"),
+            "Rotator Config": self.rot_config,
             "Decoders": lambda: print("Decoders"),
             "View": self.view,
         }
@@ -38,7 +38,7 @@ class App(customtkinter.CTk):
 
         self.telemetry = "..."
         # root!
-        self.main_container = customtkinter.CTkFrame(self, corner_radius=10)
+        self.main_container = ctk.CTkFrame(self, corner_radius=10)
         self.main_container.pack(
             fill=tkinter.BOTH,
             expand=True,
@@ -47,7 +47,7 @@ class App(customtkinter.CTk):
         )
 
         # left side panel -> for frame selection
-        self.left_side_panel = customtkinter.CTkFrame(
+        self.left_side_panel = ctk.CTkFrame(
             self.main_container,
             width=150,
             corner_radius=10,
@@ -65,14 +65,14 @@ class App(customtkinter.CTk):
         self.left_side_panel.grid_rowconfigure((7, 8), weight=1)
 
         # self.left_side_panel WIDGET
-        self.logo_label = customtkinter.CTkLabel(
+        self.logo_label = ctk.CTkLabel(
             self.left_side_panel,
             text="IST \nGround Station \n",
-            font=customtkinter.CTkFont(size=20, weight="bold"),
+            font=ctk.CTkFont(size=20, weight="bold"),
         )
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
-        self.bt_Quit = customtkinter.CTkButton(
+        self.bt_Quit = ctk.CTkButton(
             self.left_side_panel,
             text="Quit",
             fg_color=colors.red,
@@ -86,7 +86,7 @@ class App(customtkinter.CTk):
         # button to select correct frame IN self.left_side_panel WIDGET
 
         for i, page in enumerate(pages):
-            customtkinter.CTkButton(
+            ctk.CTkButton(
                 self.left_side_panel,
                 text=page,
                 command=pages[page],
@@ -94,7 +94,7 @@ class App(customtkinter.CTk):
                 height=30,  # fg_color='#1140e5',
             ).grid(row=i + 1, column=0, padx=20, pady=10)
 
-        self.connectionIndicator = customtkinter.CTkLabel(
+        self.connectionIndicator = ctk.CTkLabel(
             self.left_side_panel,
             text="MQTT\nNOT Connected\n❌",
             text_color=colors.failed,
@@ -104,7 +104,7 @@ class App(customtkinter.CTk):
         # ----------------------------------------------------
 
         # right side panel -> have self.frame inside it
-        self.right_side_panel = customtkinter.CTkFrame(
+        self.right_side_panel = ctk.CTkFrame(
             self.main_container,
             corner_radius=10,
         )
@@ -116,7 +116,7 @@ class App(customtkinter.CTk):
             pady=5,
         )
 
-        self.frame = customtkinter.CTkFrame(
+        self.frame = ctk.CTkFrame(
             self.main_container,
             corner_radius=10,
             fg_color=colors.bg,
@@ -132,13 +132,15 @@ class App(customtkinter.CTk):
 
         _Frames.mqtt_setup_create(self)
         _Frames.radio_config_create(self)
+        _Frames.rot_config_create(self)
+
 
         # MQTT setup is the first thing that appears
         _Frames.mqtt_setup(self)
 
-#     def update_telemetryBox(telemetry, msg):
-#         new = f"\n{msg.topic}: {msg.payload.decode()}"
-#         telemetry += new
+    #     def update_telemetryBox(telemetry, msg):
+    #         new = f"\n{msg.topic}: {msg.payload.decode()}"
+    #         telemetry += new
 
     def dash(self):
         _Frames.dash(self)
@@ -151,6 +153,9 @@ class App(customtkinter.CTk):
 
     def radio_config(self):
         _Frames.radio_config(self)
+
+    def rot_config(self):
+        _Frames.rot_config(self)
 
     def view(self):
         _Frames.view(self)
@@ -172,7 +177,7 @@ a = App()
 def update_telemetryBox(app, msg):
     new = f"\n{msg.topic}: {msg.payload.decode()}"
     app.telemetry += new
-    app.telemetryBox.insert('end', app.telemetry)
+    app.telemetryBox.insert("end", app.telemetry)
 
 
 def on_message(client, userdata, msg):
