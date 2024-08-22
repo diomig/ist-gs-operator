@@ -1,6 +1,5 @@
 import tkinter as tk
 
-import CTkListbox
 import customtkinter as ctk
 import matplotlib.backends.backend_tkagg as tkagg  # import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
@@ -52,7 +51,8 @@ def dash(self):
     # HACK: don't forget that elevation goes the other way around
     # 90º -> 0º inside-out
     # so, r = 90 - el
-    self.ax.set_rticks([0, 30, 60, 90])  # Less radial ticks
+    elticks = [0, 30, 60, 90]
+    self.ax.set_rticks(elticks, [90-e for e in elticks])  # Less radial ticks
     # Move radial labels away from plotted line
     self.ax.set_rlabel_position(-22.5)
     self.ax.grid(True)
@@ -214,13 +214,13 @@ def mqtt_setup_create(self):
 def mqtt_setup(self):
     self.clear_frame()
     self.mqttTitle.grid(row=0, column=0, columnspan=4, pady=100)
-    self.hostLabel.grid(row=1, column=0, padx=10, sticky=tk.W)
+    self.hostLabel.grid(row=1, column=0, padx=10, sticky='W')
     self.hostEntry.grid(row=2, column=0, padx=10)
-    self.portLabel.grid(row=1, column=1, padx=10, sticky=tk.W)
+    self.portLabel.grid(row=1, column=1, padx=10, sticky='W')
     self.portEntry.grid(row=2, column=1, padx=10)
-    self.usrLabel.grid(row=3, column=0, padx=10, pady=(50, 2), sticky=tk.W)
+    self.usrLabel.grid(row=3, column=0, padx=10, pady=(50, 2), sticky='W')
     self.usrEntry.grid(row=4, column=0, padx=10)
-    self.pwLabel.grid(row=5, column=0, padx=10, pady=(20, 2), sticky=tk.W)
+    self.pwLabel.grid(row=5, column=0, padx=10, pady=(20, 2), sticky='W')
     self.pwEntry.grid(row=6, column=0, padx=10)
     if not self.connected:
         self.connectButton.grid(row=8, column=0, columnspan=4, pady=100)
@@ -608,25 +608,25 @@ def radio_config_create(self):
 def radio_config(self):
     self.clear_frame()
     self.radioTitle.grid(row=0, column=0, columnspan=5)
-    self.freqLabel.grid(row=1, column=0, padx=10, pady=20, sticky=tk.E)
-    self.freqEntry.grid(row=1, column=1, padx=10, pady=20, sticky=tk.W)
-    self.freqCombo.grid(row=1, column=1, padx=(160, 10), pady=20, sticky=tk.E)
-    self.freqRange.grid(row=1, column=2, padx=10, pady=20, sticky=tk.W)
-    self.bwLabel.grid(row=2, column=0, padx=10, pady=20, sticky=tk.E)
-    self.bwOption.grid(row=2, column=1, padx=10, pady=20, sticky=tk.W)
-    self.crLabel.grid(row=3, column=0, padx=10, pady=20, sticky=tk.E)
-    self.crOption.grid(row=3, column=1, padx=10, pady=20, sticky=tk.W)
-    self.plenLabel.grid(row=4, column=0, padx=10, pady=20, sticky=tk.E)
-    self.plenEntry.grid(row=4, column=1, padx=10, pady=20, sticky=tk.W)
-    self.plenRange.grid(row=4, column=1, padx=50, pady=20, sticky=tk.E)
-    self.sfLabel.grid(row=5, column=0, padx=10, pady=20, sticky=tk.E)
-    self.sfSegmented.grid(row=5, column=1, padx=10, pady=20, sticky=tk.W)
-    self.txpwrLabel.grid(row=6, column=0, padx=10, pady=20, sticky=tk.E)
+    self.freqLabel.grid(row=1, column=0, padx=10, pady=20, sticky='E')
+    self.freqEntry.grid(row=1, column=1, padx=10, pady=20, sticky='W')
+    self.freqCombo.grid(row=1, column=1, padx=(160, 10), pady=20, sticky='E')
+    self.freqRange.grid(row=1, column=2, padx=10, pady=20, sticky='W')
+    self.bwLabel.grid(row=2, column=0, padx=10, pady=20, sticky='E')
+    self.bwOption.grid(row=2, column=1, padx=10, pady=20, sticky='W')
+    self.crLabel.grid(row=3, column=0, padx=10, pady=20, sticky='E')
+    self.crOption.grid(row=3, column=1, padx=10, pady=20, sticky='W')
+    self.plenLabel.grid(row=4, column=0, padx=10, pady=20, sticky='E')
+    self.plenEntry.grid(row=4, column=1, padx=10, pady=20, sticky='W')
+    self.plenRange.grid(row=4, column=1, padx=50, pady=20, sticky='E')
+    self.sfLabel.grid(row=5, column=0, padx=10, pady=20, sticky='E')
+    self.sfSegmented.grid(row=5, column=1, padx=10, pady=20, sticky='W')
+    self.txpwrLabel.grid(row=6, column=0, padx=10, pady=20, sticky='E')
     self.txpwrSlider.grid(row=6, column=1, padx=10, pady=20)
-    self.txpwrValue.grid(row=6, column=2, padx=10, pady=20, sticky=tk.W)
-    self.lnaLabel.grid(row=7, column=0, padx=10, pady=20, sticky=tk.E)
+    self.txpwrValue.grid(row=6, column=2, padx=10, pady=20, sticky='W')
+    self.lnaLabel.grid(row=7, column=0, padx=10, pady=20, sticky='E')
     self.lnaSlider.grid(row=7, column=1, padx=10, pady=20)
-    self.lnaValue.grid(row=7, column=2, padx=10, pady=20, sticky=tk.W)
+    self.lnaValue.grid(row=7, column=2, padx=10, pady=20, sticky='W')
     self.ackdLabel.grid(row=8, column=0, padx=10)
     self.ackdelayEntry.grid(row=9, column=0, padx=10)
     self.ackdUnit.grid(row=9, column=0, padx=(130, 10))
@@ -636,8 +636,8 @@ def radio_config(self):
     self.rxtoLabel.grid(row=8, column=2, padx=10)
     self.rxtoEntry.grid(row=9, column=2, padx=10)
     self.rxtoUnit.grid(row=9, column=2, padx=(130, 10))
-    self.chksumLabel.grid(row=10, column=0, padx=10, pady=20, sticky=tk.E)
-    self.chksumSwitch.grid(row=10, column=1, padx=10, pady=20, sticky=tk.E)
+    self.chksumLabel.grid(row=10, column=0, padx=10, pady=20, sticky='E')
+    self.chksumSwitch.grid(row=10, column=1, padx=10, pady=20, sticky='E')
     self.button.grid(row=11, column=1, padx=(10, 10), pady=20, columnspan=5)
 
 
@@ -648,23 +648,25 @@ def rot_config_create(self):
 
     def update(data):
         # Clear the listbox
-        self.my_list.delete(0, tk.END)
+        self.my_list.delete(0, 'end')
 
         # Add modelopts to listbox
         for item in data:
-            self.my_list.insert(tk.END, item)
+            self.my_list.insert('end', item)
 
     # Update entry box with listbox clicked
     def fillout(e):
         # Delete whatever is in the entry box
-        self.my_entry.delete(0, tk.END)
+        self.my_entry.delete(0, 'end')
 
         # Add clicked list item to entry box
-        selected = self.my_list.get(tk.ANCHOR)
+        selected = self.my_list.get('anchor')
         self.my_entry.insert(0, "  ".join(selected.split()))
-        self.modelselectLabel.grid(row=3, column=1, padx=30, sticky=tk.E)
-        self.rotmodel = selected.split()[0]
-        print("Rotator model: ", self.rotmodel)
+        self.modelselectLabel.grid(row=3, column=1, padx=30, sticky='E')
+        print('Selected: ', selected)
+        if selected:
+            self.rotmodel = selected.split()[0]
+            print("Rotator model: ", self.rotmodel)
 
     # Create function to check entry vs listbox
     def check(e):
@@ -711,16 +713,9 @@ def rot_config_create(self):
         fg="#ffffff",
         highlightcolor="#666666",
         font=fonts.listbox,
-        # Selectbackground="#aaaaaa",
+        # selectbackground="#aaaaaa",
     )
-    #     self.my_list = CTkListbox.CTkListbox(  # tk.Listbox(
-    #         self.frame,
-    #         width=500,
-    #         height=300,
-    #     )
 
-    # Create a list of pizza modelopts
-    #     modelopts = ["Pepperoni", "Peppers", "Mushrooms", "Cheese", "Onions", "Ham", "Taco"]
     modelopts = open("hamlib-rotators.txt", "r").read().splitlines()
     # Add the modelopts to our list
     update(modelopts)
