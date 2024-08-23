@@ -1,4 +1,5 @@
 import tkinter as tk
+from os.path import expanduser, basename
 
 import customtkinter as ctk
 
@@ -70,7 +71,7 @@ def decoders(app):
     # Create a listbox
     app.decList = tk.Listbox(
         app.frame,
-        width=70,
+        width=30,
         bg=colors.bg,
         fg="#ffffff",
         highlightcolor="#666666",
@@ -95,7 +96,39 @@ def decoders(app):
     # Create a binding on the entry box
     app.decEntry.bind("<KeyRelease>", check)
 
-    app.decLabel.grid()
-    app.decoderselectLabel.grid()
-    app.decEntry.grid()
-    app.decList.grid()
+    # Hide hidden directy (the ones starting w/ a '.')
+    try:
+        try:
+            app.tk.call("tk_getOpenFile", "-foobarbaz")
+        except tk.TclError:
+            pass
+        # now set the magic variables accordingly
+        app.tk.call("set", "::tk::dialog::file::showHiddenBtn", "1")
+        app.tk.call("set", "::tk::dialog::file::showHiddenVar", "0")
+    except Exception:
+        pass
+
+    def open_file():
+        file = tk.filedialog.askopenfile(
+            mode="r",
+            initialdir=expanduser("~"),
+            title="Select a file",
+            filetypes=[("Decoder Files", "*.ksy"), ("all files", "*.*")],
+        )
+        if file is not None:
+            decoderopts.insert(0, basename(file.name) + '\033[92m ~~ \033[00m')
+            update(decoderopts)
+
+    app.addfileButton = ctk.CTkButton(
+        app.frame,
+        text="+",
+        font=fonts.button,
+        width=40,
+        command=open_file,
+    )
+
+    app.decLabel.grid(row=2, column=0)
+    app.decoderselectLabel.grid(row=2, column=1)
+    app.decEntry.grid(row=3, column=0)
+    app.addfileButton.grid(row=3, column=1)
+    app.decList.grid(row=4, column=0, padx=30, sticky='W')
