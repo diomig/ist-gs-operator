@@ -7,3 +7,4 @@ test.py
 
 # don't track the decoders
 Decoders/*
+decoders.json
