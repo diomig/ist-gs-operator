@@ -120,23 +120,24 @@ def decoders(app):
         pass
 
     def open_file():
-        file = tk.filedialog.askopenfile(
+        files = tk.filedialog.askopenfiles(
             mode="r",
             initialdir=expanduser("~"),
             title="Select a file",
             filetypes=[("Decoder Files", "*.ksy"), ("all files", "*.*")],
         )
-        if file is not None:
-            # decoderopts.insert(0, basename(file.name))
-            decoderopts[basename(file.name)] = {
-                "source": file.name,
-                "compiled": None,
-            }
-            update(decoderopts)
-            #             with open("decoder-list.dat", "a") as dl:
-            #                 dl.write(file.name + "\n")
-            with open("decoders.json", "w") as df:
-                json.dump(decoderopts, df, indent=4)
+        for file in files:
+            if file is not None:
+                # decoderopts.insert(0, basename(file.name))
+                decoderopts[basename(file.name)] = {
+                    "source": file.name,
+                    "compiled": None,
+                }
+                update(decoderopts)
+                #             with open("decoder-list.dat", "a") as dl:
+                #                 dl.write(file.name + "\n")
+                with open("decoders.json", "w") as df:
+                    json.dump(decoderopts, df, indent=4)
 
     app.addfileButton = ctk.CTkButton(
         app.frame,
