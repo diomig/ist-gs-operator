@@ -1,4 +1,9 @@
+# cache files, yucky
 __pycache__/
 *.pyc
 
+# this is just to test random stuff
 test.py
+
+# don't track the decoders
+Decoders/*
