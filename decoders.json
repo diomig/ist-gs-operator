@@ -10,5 +10,17 @@
     "Prometheus.ksy": {
         "source": "/home/diomig/Desktop/PROMETHEUS/Parsing/Prometheus.ksy",
         "compiled": "prometheus.py"
+    },
+    "fees.ksy": {
+        "source": "/home/diomig/Desktop/user-interface/Decoders/fees.ksy",
+        "compiled": null
+    },
+    "ksy_vzlusat2.ksy": {
+        "source": "/home/diomig/Desktop/user-interface/Decoders/ksy_vzlusat2.ksy",
+        "compiled": null
+    },
+    "sdsat.ksy": {
+        "source": "/home/diomig/Desktop/user-interface/Decoders/sdsat.ksy",
+        "compiled": null
     }
 }
