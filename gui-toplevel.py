@@ -81,7 +81,6 @@ class App(ctk.CTk):
             command=self.close_window,
         )
         self.bt_Quit.grid(row=9, column=0, padx=20, pady=10)
-
         # ----------------------------------------------------
 
         # button to select correct frame IN self.left_side_panel WIDGET
@@ -148,8 +147,8 @@ class App(ctk.CTk):
     def mqtt_setup(self):
         MQTTSetup.mqtt_setup(self)
 
-#     def categories(self):
-#         _Frames.categories(self)
+    #     def categories(self):
+    #         _Frames.categories(self)
 
     def radio_config(self):
         RadioConfig.radio_config(self)
@@ -175,6 +174,13 @@ class App(ctk.CTk):
 
 
 a = App()
+
+
+def just_quit(e):
+    a.close_window()
+
+
+a.bind("<Control-w>", just_quit)
 
 
 def update_telemetryBox(app, msg):
