@@ -44,6 +44,13 @@ def rot_config_create(app):
         # update our listbox with selected items
         update(data)
 
+    # Frame Title
+    app.rotTitle = ctk.CTkLabel(
+        app.frame,
+        text="Rotator Config",
+        font=fonts.header,
+    )
+
     # Create a label
     app.rotmodelLabel = ctk.CTkLabel(
         app.frame,
@@ -147,7 +154,8 @@ def rot_config_create(app):
 
 def rot_config(app):
     app.clear_frame()
-    app.rotmodelLabel.grid(row=2, column=0, pady=(50, 5))
+    app.rotTitle.grid(row=0, column=0, columnspan=5, pady=(20, 40))
+    app.rotmodelLabel.grid(row=2, column=0, padx=80, pady=(50, 5), sticky='w')
     app.my_entry.grid(row=3, column=0, padx=40, columnspan=3)
     app.my_list.grid(row=4, column=0, padx=40, pady=5, columnspan=3)
     app.rothostLabel.grid(row=6, column=0, padx=50, pady=(40, 5), sticky="W")

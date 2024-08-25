@@ -381,7 +381,7 @@ def radio_config_create(app):
 
 def radio_config(app):
     app.clear_frame()
-    app.radioTitle.grid(row=0, column=0, columnspan=5)
+    app.radioTitle.grid(row=0, column=0, columnspan=5, pady=(20, 40))
     app.freqLabel.grid(row=1, column=0, padx=10, pady=20, sticky="E")
     app.freqEntry.grid(row=1, column=1, padx=10, pady=20, sticky="W")
     app.freqCombo.grid(row=1, column=1, padx=(160, 10), pady=20, sticky="E")

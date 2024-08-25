@@ -13,7 +13,7 @@
     },
     "fees.ksy": {
         "source": "/home/diomig/Desktop/user-interface/Decoders/fees.ksy",
-        "compiled": null
+        "compiled": "fees.py"
     },
     "ksy_vzlusat2.ksy": {
         "source": "/home/diomig/Desktop/user-interface/Decoders/ksy_vzlusat2.ksy",

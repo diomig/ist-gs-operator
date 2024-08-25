@@ -24,7 +24,7 @@ class App(ctk.CTk):
             "Radio Config": self.radio_config,
             "Rotator Config": self.rot_config,
             "Decoders": self.decoders,
-            "View": self.view,
+            "Preferences": self.preferences,
         }
         super().__init__()
 
@@ -119,7 +119,7 @@ class App(ctk.CTk):
         self.frame = ctk.CTkFrame(
             self.main_container,
             corner_radius=10,
-            fg_color=colors.bg,
+#             fg_color=colors.bg,
         )
         self.frame.pack(
             in_=self.right_side_panel,
@@ -159,7 +159,7 @@ class App(ctk.CTk):
     def decoders(self):
         DecoderConfig.decoders(self)
 
-    def view(self):
+    def preferences(self):
         Preferences.view(self)
 
     # close the entire window

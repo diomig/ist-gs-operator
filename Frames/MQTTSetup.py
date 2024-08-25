@@ -104,7 +104,7 @@ def mqtt_setup_create(app):
 
 def mqtt_setup(app):
     app.clear_frame()
-    app.mqttTitle.grid(row=0, column=0, columnspan=4, pady=100)
+    app.mqttTitle.grid(row=0, column=0, columnspan=4, padx=30, pady=(20, 60))
     app.hostLabel.grid(row=1, column=0, padx=10, sticky="W")
     app.hostEntry.grid(row=2, column=0, padx=10)
     app.portLabel.grid(row=1, column=1, padx=10, sticky="W")
