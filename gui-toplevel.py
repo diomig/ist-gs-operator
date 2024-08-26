@@ -7,6 +7,8 @@ from Frames import (Dashboard, DecoderConfig, MQTTSetup, Preferences,
                     RadioConfig, RotConfig)
 from MQTT import mqttC
 from utils import colors, fonts
+from PIL import Image, ImageTk
+
 
 DARK_MODE = "dark"
 ctk.set_appearance_mode(DARK_MODE)
@@ -119,7 +121,7 @@ class App(ctk.CTk):
         self.frame = ctk.CTkFrame(
             self.main_container,
             corner_radius=10,
-#             fg_color=colors.bg,
+            #             fg_color=colors.bg,
         )
         self.frame.pack(
             in_=self.right_side_panel,
@@ -174,6 +176,11 @@ class App(ctk.CTk):
 
 
 a = App()
+
+# a.after(201, lambda: a.iconbitmap('logo.jpeg'))
+ico = Image.open('logo.png')
+photo = ImageTk.PhotoImage(ico)
+a.wm_iconphoto(False, photo)
 
 
 def just_quit(e):
