@@ -6,9 +6,8 @@ from matplotlib.figure import Figure
 from utils import colors, fonts
 
 
-def dash(app):
+def dash_create(app):
     """Dashboard widget"""
-    app.clear_frame()
     app.tlmLabel = ctk.CTkLabel(
         app.frame,
         text="Raw Telemetry",
@@ -30,6 +29,8 @@ def dash(app):
     # app.ax.plot(np.pi, 1, marker="x")
     app.ax.set_rmax(90)
     app.ax.set_ylim(0, 90)
+    app.ax.tick_params(axis='y', colors='#888888')
+
     # HACK: don't forget that elevation goes the other way around
     # 90º -> 0º inside-out
     # so, r = 90 - el
@@ -37,7 +38,7 @@ def dash(app):
     app.ax.set_rticks(elticks, [90 - e for e in elticks])  # Less radial ticks
     # Move radial labels away from plotted line
     app.ax.set_rlabel_position(-22.5)
-    app.ax.grid(True)
+    app.ax.grid(True, color='gray')
 
     #     ticks = np.pi/180. * np.linspace(180,  -180, 8, endpoint=False)
     #     app.ax.set_xticks(ticks)
@@ -47,36 +48,25 @@ def dash(app):
     app.canvas = tkagg.FigureCanvasTkAgg(fig, master=app.frame)
     app.canvas.get_tk_widget().configure(bg=colors.bg)
     app.canvas.draw()
-    app.canvas.get_tk_widget().grid()
 
     # ++++++++++++++++++++++++ JUST FOR TESTING ++++++++++++++++++++++++++++++
-    def create_controls(app):
-        # Frame to hold the controls
-        control_frame = ctk.CTkFrame(app.frame)
-        control_frame.grid()
+    # Frame to hold the controls
+    app.control_frame = ctk.CTkFrame(app.frame)
 
-        # Entry for r
-        ctk.CTkLabel(control_frame, text="r:").grid()
-        app.r_entry = ctk.CTkEntry(control_frame, width=100)
-        app.r_entry.grid()
+    # Entry for r
+    app.elLabel = ctk.CTkLabel(app.control_frame, text="El [°]:")
+    app.elEntry = ctk.CTkEntry(app.control_frame, width=100)
 
-        # Entry for theta
-        ctk.CTkLabel(control_frame, text="θ (degrees):").grid()
-        app.theta_entry = ctk.CTkEntry(control_frame, width=100)
-        app.theta_entry.grid()
-
-        # Button to update the marker
-        update_button = ctk.CTkButton(
-            control_frame, text="Update Marker", command=update_marker
-        )
-        update_button.grid()
+    # Entry for theta
+    app.azLabel = ctk.CTkLabel(app.control_frame, text="Az [°]:")
+    app.azEntry = ctk.CTkEntry(app.control_frame, width=100)
 
     def update_marker():
         try:
             # Get the values from the entries
-            r = float(app.r_entry.get())
+            r = 90 - float(app.elEntry.get())
             # Convert degrees to radians
-            theta = np.radians(float(app.theta_entry.get()))
+            theta = np.radians(float(app.azEntry.get()))
 
             # Update the marker position
             app.ax.plot(theta, r, marker="o")
@@ -86,7 +76,20 @@ def dash(app):
             # Handle invalid input
             print("Please enter valid numeric values for r and θ.")
 
-    create_controls(app)
+    # Button to update the marker
+    app.updatemarkerButton = ctk.CTkButton(
+        app.control_frame, text="Update Marker", command=update_marker
+    )
 
-    app.tlmLabel.grid()
-    app.telemetryBox.grid()
+
+def dash(app):
+    app.clear_frame()
+    app.canvas.get_tk_widget().grid(row=2, column=0, padx=10)
+    app.control_frame.grid(row=2, column=1, padx=10)
+    app.azLabel.grid()
+    app.azEntry.grid()
+    app.elLabel.grid()
+    app.elEntry.grid()
+    app.updatemarkerButton.grid()
+    app.tlmLabel.grid(row=4, column=0, padx=20)
+    app.telemetryBox.grid(row=5, column=0, columnspan=4, padx=10)
