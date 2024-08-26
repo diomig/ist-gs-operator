@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from utils import fonts, colors
+from utils import colors, fonts
 
 
 def change_scaling_event(new_scaling):
@@ -8,11 +8,10 @@ def change_scaling_event(new_scaling):
     ctk.set_widget_scaling(new_scaling_float)
 
 
-def view(app):
+def preferences_create(app):
     """edit UI"""
     #     ctk.set_appearance_mode("light")
 
-    app.clear_frame()
 
     app.scaling_label = ctk.CTkLabel(
         app.frame,
@@ -40,7 +39,7 @@ def view(app):
         command=lambda thm: ctk.set_appearance_mode(thm),
     )
 
-    app.darkmode = True
+    app.darkmode = ctk.get_appearance_mode() == "Dark"
 
     def change_theme():
         app.darkmode = not app.darkmode
@@ -55,7 +54,7 @@ def view(app):
     app.themeButton = ctk.CTkButton(
         app.frame,
         text="☀︎" if app.darkmode else "☾",
-        font=fonts.indicator,
+        font=fonts.icon,
         command=change_theme,
         width=20,
     )
@@ -65,9 +64,13 @@ def view(app):
         font=fonts.units,
         text_color=colors.units,
     )
+
+
+def preferences(app):
+    app.clear_frame()
     app.themeLabel.grid(row=3, column=0, padx=50, pady=50)
     # app.themeOption.grid()
-    app.themeButton.grid(row=3, column=1, pady=50, sticky='w')
+    app.themeButton.grid(row=3, column=1, pady=50, sticky="w")
     app.themeMode.grid(row=3, column=2, padx=20)
     app.scaling_label.grid(row=5, column=0, padx=20, pady=(10, 0))
-    app.scaling_optionemenu.grid(row=5, column=1, columnspan=3, sticky='w')
+    app.scaling_optionemenu.grid(row=5, column=1, columnspan=3, sticky="w")
