@@ -6,6 +6,7 @@ class fonts:
     button = ("SF Pro Display", 17)
     indicator = ("Roboto", 18, "bold")
     listbox = 'TkFixedFont'
+    icon = ('Roboto', 26)
 
 
 class colors:
