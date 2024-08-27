@@ -1,0 +1,27 @@
+presets:
+  ioptron:
+    daemoncmd: rotctld
+    device: /dev/ttyUSB0
+    host: 10.42.0.236
+    model: '1901'
+    port: 4533
+    sspeed: 115200
+  local-dummy:
+    daemoncmd: rotctld
+    host: localhost
+    model: '1'
+    port: 4533
+  local-ioptron:
+    daemoncmd: path/to/custom/driver/rotctld
+    device: /dev/ttyUSB0
+    host: localhost
+    model: '1901'
+    port: 4535
+    sspeed: 115200
+  new:
+    device: /dev/ttyUSB0
+    host: localhost
+    model: '1901'
+    port: '4535'
+    sspeed: 115200
+select: ioptron

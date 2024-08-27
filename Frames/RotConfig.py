@@ -1,6 +1,9 @@
+import json
 import tkinter as tk
 
 import customtkinter as ctk
+
+from MQTT import Topics, mqttC
 from utils import colors, fonts
 
 
@@ -22,11 +25,11 @@ def rot_config_create(app):
         # Add clicked list item to entry box
         selected = app.my_list.get("anchor")
         app.my_entry.insert(0, "  ".join(selected.split()))
-        app.modelselectLabel.grid(row=3, column=1, padx=30, sticky="E")
-        print("Selected: ", selected)
         if selected:
+            print("Selected: ", selected)
             app.values.rotmodel = selected.split()[0]
             print("Rotator model: ", app.values.rotmodel)
+            app.modelselectLabel.grid(row=3, column=1, padx=30, sticky="E")
 
     # Create function to check entry vs listbox
     def check(e):
@@ -132,7 +135,7 @@ def rot_config_create(app):
 
     app.rotbaudLabel = ctk.CTkLabel(
         app.frame,
-        text="Serial speed/baudrate",
+        text="Serial speed",
         font=fonts.label,
     )
     app.rotbaudEntry = ctk.CTkEntry(
@@ -151,11 +154,128 @@ def rot_config_create(app):
     app.my_list.selection_set(index)
     app.my_list.yview_scroll(index - 3, "units")
 
+    app.newpresetEntry = ctk.CTkEntry(
+        app.frame,
+        placeholder_text="Name new preset",
+        font=fonts.entry,
+    )
+
+    def add_preset():
+        name = app.newpresetEntry.get()
+        success = False
+        if name == "":
+            print("Specify name of the preset")
+        elif name in presetlist:
+            print("Name already in use")
+        else:
+            success = True
+            newpreset = {
+                "host": app.values.rothost,
+                "port": app.values.rotport,
+                "model": app.values.rotmodel,
+                "device": app.values.rotdevice,
+                "sspeed": app.values.sspeed,
+            }
+            presetopts["presets"][name] = newpreset
+            presetlist.append(name)
+            json.dump(presetopts, open("rot_config.json", "w"), indent=4)
+            app.presetOption.configure(values=presetlist)
+            print(json.dumps({name: newpreset}))
+            mqttC.publish(Topics.newpreset, json.dumps({name: newpreset}))
+        color = colors.connected if success else colors.failed
+        app.newpresetEntry.configure(border_color=color)
+
+    app.newpresetButton = ctk.CTkButton(
+        app.frame,
+        text="Add\npreset",
+        width=50,
+        command=add_preset,
+    )
+    app.presetLabel = ctk.CTkLabel(
+        app.frame,
+        text="Select a preset",
+        font=fonts.label,
+    )
+    presetopts = json.load(open("rot_config.json", "r"))
+    presetlist = ["None"] + list(presetopts.get("presets"))
+
+    def preset_selected(e):
+        selected = app.presetOption.get()
+        if selected == "None":
+            app.deletepresetButton.configure(state="disabled")
+            return
+        else:
+            app.deletepresetButton.configure(state="normal")
+        this = presetopts['presets'][selected]
+        app.rothostEntry.delete(0, 'end')
+        app.rothostEntry.insert(0, this['host'])
+        app.rotportEntry.delete(0, 'end')
+        app.rotportEntry.insert(0, this['port'])
+        app.rotdevEntry.delete(0, 'end')
+        app.rotdevEntry.insert(0, this['device'])
+        app.rotbaudEntry.delete(0, 'end')
+        app.rotbaudEntry.insert(0, this['sspeed'])
+        index = model_index(modelopts, this['model'])
+        print(index)
+        app.my_list.selection_clear(0, 'end')
+        app.my_list.selection_set(index)
+        app.my_list.yview_scroll(index, "units")
+        app.my_entry.delete(0, 'end')
+        app.my_entry.insert(0, this['model'])
+
+    app.presetOption = ctk.CTkOptionMenu(
+        app.frame,
+        values=presetlist,
+        command=preset_selected,
+    )
+
+    def delete_preset():
+        obj = app.presetOption.get()
+        print(f"Deleting {obj}")
+        deleted = presetopts["presets"].pop(obj)
+        print(deleted)
+        print(presetopts)
+        json.dump(presetopts, open("rot_config.json", "w"), indent=4)
+        app.presetOption.configure(
+            values=["None"] + list(presetopts.get("presets")))
+        app.presetOption.set("None")
+
+    app.deletepresetButton = ctk.CTkButton(
+        app.frame,
+        text="Delete",
+        fg_color=colors.red,
+        hover_color=colors.red_hover,
+        command=delete_preset,
+        state='disabled',
+        width=20,
+    )
+
+    def start_rot():
+        print(f"Model: {app.values.rotmodel}")
+        print(f"Host: {app.values.rothost}")
+        print(f"Port: {app.values.rotport}")
+        print(f"Device: {app.values.rotdevice}")
+        print(f"Serial Baud: {app.values.sspeed}")
+        app.values.rotselect = ""
+        mqttC.publish(Topics.rotmodel, app.values.rotmodel)
+        mqttC.publish(Topics.rothost, app.values.rothost)
+        mqttC.publish(Topics.rotport, app.values.rotport)
+        mqttC.publish(Topics.rotdevice, app.values.rotdevice)
+        mqttC.publish(Topics.rotsspeed, app.values.sspeed)
+        mqttC.publish(Topics.rotselect, app.values.rotselect)
+
+    app.rotstartButton = ctk.CTkButton(
+        app.frame,
+        text="Start Rotator",
+        font=fonts.button,
+        command=start_rot,
+    )
+
 
 def rot_config(app):
     app.clear_frame()
     app.rotTitle.grid(row=0, column=0, columnspan=5, pady=(20, 40))
-    app.rotmodelLabel.grid(row=2, column=0, padx=80, pady=(50, 5), sticky='w')
+    app.rotmodelLabel.grid(row=2, column=0, padx=80, pady=(50, 5), sticky="w")
     app.my_entry.grid(row=3, column=0, padx=40, columnspan=3)
     app.my_list.grid(row=4, column=0, padx=40, pady=5, columnspan=3)
     app.rothostLabel.grid(row=6, column=0, padx=50, pady=(40, 5), sticky="W")
@@ -167,3 +287,11 @@ def rot_config(app):
     app.rotdevEntry.grid(row=9, column=0, padx=50, sticky="W")
     app.rotbaudLabel.grid(row=8, column=1, padx=10, pady=(40, 5), sticky="W")
     app.rotbaudEntry.grid(row=9, column=1, padx=10, sticky="W")
+    app.newpresetEntry.grid(row=10, column=1, pady=(40, 20), sticky="E")
+    app.newpresetButton.grid(row=10, column=2, pady=(40, 20), sticky="W")
+    app.presetLabel.grid(row=11, column=0, padx=50, pady=10, sticky="W")
+    app.presetOption.grid(row=11, column=0, padx=50, sticky="E")
+    app.deletepresetButton.grid(row=11, column=1)
+    app.rotstartButton.grid(row=12, column=0, columnspan=4, pady=50)
+
+    app.presetOption.set("None")
