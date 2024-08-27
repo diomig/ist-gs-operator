@@ -1,14 +1,13 @@
 import tkinter
 
 import customtkinter as ctk
+from PIL import Image, ImageTk
 
 from defaults import Default
 from Frames import (Dashboard, DecoderConfig, MQTTSetup, Preferences,
                     RadioConfig, RotConfig)
 from MQTT import mqttC
 from utils import colors, fonts
-from PIL import Image, ImageTk
-
 
 DARK_MODE = "dark"
 ctk.set_appearance_mode(DARK_MODE)
@@ -132,9 +131,12 @@ class App(ctk.CTk):
             pady=0,
         )
 
+        Dashboard.dash_create(self)
         MQTTSetup.mqtt_setup_create(self)
         RadioConfig.radio_config_create(self)
         RotConfig.rot_config_create(self)
+
+        Preferences.preferences_create(self)
 
         # MQTT setup is the first thing that appears
         MQTTSetup.mqtt_setup(self)
@@ -162,7 +164,7 @@ class App(ctk.CTk):
         DecoderConfig.decoders(self)
 
     def preferences(self):
-        Preferences.view(self)
+        Preferences.preferences(self)
 
     # close the entire window
 
@@ -178,7 +180,7 @@ class App(ctk.CTk):
 a = App()
 
 # a.after(201, lambda: a.iconbitmap('logo.jpeg'))
-ico = Image.open('logo.png')
+ico = Image.open("logo.png")
 photo = ImageTk.PhotoImage(ico)
 a.wm_iconphoto(False, photo)
 
