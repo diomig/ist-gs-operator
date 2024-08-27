@@ -4,6 +4,7 @@ globalName = "myGS/"
 
 
 class Topics:
+    # Radio
     freq = f"{globalName}radio/freq"
     bw = f"{globalName}radio/bw"
     cr = f"{globalName}radio/cr"
@@ -16,6 +17,15 @@ class Topics:
     ackwait = f"{globalName}radio/ackw"
     rxto = f"{globalName}radio/rxto"
 
+    # Rotator
+    daemoncmd = f"{globalName}rot/daemon"
+    rothost = f"{globalName}rot/host"
+    rotport = f"{globalName}rot/port"
+    rotdevice = f"{globalName}rot/dev"
+    rotsspeed = f"{globalName}rot/sspeed"
+    rotmodel = f"{globalName}rot/model"
+    rotselect = f"{globalName}rot/select"
+    newpreset = f'{globalName}rot/newpreset'
 
 # Define the MQTT topics
 # pub_topics = ["radio/freq", "radio/bw", "radio/br", "radio/chksum", "msg/cmd"]
