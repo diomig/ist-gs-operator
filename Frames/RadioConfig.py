@@ -412,4 +412,4 @@ def radio_config(app):
     app.rxtoUnit.grid(row=9, column=2, padx=(130, 10))
     app.chksumLabel.grid(row=10, column=0, padx=10, pady=20, sticky="E")
     app.chksumSwitch.grid(row=10, column=1, padx=10, pady=20, sticky="E")
-    app.button.grid(row=11, column=1, padx=(10, 10), pady=20, columnspan=5)
+    # app.button.grid(row=11, column=1, padx=(10, 10), pady=20, columnspan=5)
