@@ -91,10 +91,10 @@ def decoders(app):
         app.frame,
         width=40,
         bg=colors.bg,
-        fg="#ffffff",
-        highlightcolor="#666666",
+        fg=colors.listbox_bg,
+        highlightcolor=colors.listbox_hl,
+        selectbackground=colors.listbox_sel,
         font=fonts.listbox,
-        # selectbackground="#aaaaaa",
     )
 
     try:
