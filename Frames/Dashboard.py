@@ -2,7 +2,8 @@ import customtkinter as ctk
 import matplotlib.backends.backend_tkagg as tkagg  # import FigureCanvasTkAgg
 import numpy as np
 from matplotlib.figure import Figure
-
+from colorama import Fore
+from rotClient import Rotator
 from utils import colors, fonts
 
 
@@ -91,7 +92,6 @@ def dash_create(app):
     app.ax.set_ylim(0, 90)
     app.ax.tick_params(axis="y", colors="#888888")
 
-
     # HACK: don't forget that elevation goes the other way around
     # 90º -> 0º inside-out
     # so, r = 90 - el
@@ -104,9 +104,9 @@ def dash_create(app):
     #     ticks = np.pi/180. * np.linspace(180,  -180, 8, endpoint=False)
     #     app.ax.set_xticks(ticks)
     app.ax.set_xticks([0, np.pi / 2, np.pi, 3 * np.pi / 2])
-    app.ax.set_theta_zero_location('N')  # North corresponds to az=0
+    app.ax.set_theta_zero_location("N")  # North corresponds to az=0
     app.ax.set_theta_direction(-1)  # set direction to clockwise
-    app.ax.set_xticklabels(["N", "W", "S", "E"])  # Labels for the ticks
+    app.ax.set_xticklabels(["N", "E", "S", "W"])  # Labels for the ticks
     app.ax.tick_params(axis="x", colors="white")
     app.canvas = tkagg.FigureCanvasTkAgg(fig, master=app.frame)
     app.canvas.get_tk_widget().configure(bg=colors.bg)
@@ -127,17 +127,21 @@ def dash_create(app):
     def update_marker():
         try:
             # Get the values from the entries
-            r = 90 - float(app.elEntry.get())
-            # Convert degrees to radians
-            theta = np.radians(float(app.azEntry.get()))
+            mode = app.tab_view.get()
+            el = app.el if mode == "Auto" else float(app.elEntry.get())
+            r = 90 - el
+
+            az = app.az if mode == "Auto" else float(app.azEntry.get())
+            theta = np.radians(az)
 
             # Update the marker position
-            app.ax.plot(theta, r, marker="o")
+            app.ax.lines.clear()
+            app.ax.plot(theta, r, marker="o", color=colors.marker)
             app.canvas.draw()
 
         except ValueError:
             # Handle invalid input
-            print("Please enter valid numeric values for r and θ.")
+            print("Please enter valid numeric values for Az and El!")
 
     # Button to update the marker
     app.updatemarkerButton = ctk.CTkButton(
@@ -146,17 +150,53 @@ def dash_create(app):
 
     app.tab_view = RotPanel(app.frame, top=app, width=300)
 
+    app.rot = Rotator("localhost", 4533)
+
 
 def dash(app):
+    def update_marker():
+        if app.tab_view.get() == 'Manual':
+            return
+        try:
+            # Get the values from the entries
+            el = app.el
+            r = 90 - float(el)
+
+            az = app.az
+            theta = np.radians(float(az))
+
+            # Update the marker position
+            app.ax.lines.clear()
+            app.ax.plot(theta, r, marker="o", color=colors.marker)
+            app.canvas.draw()
+
+        except ValueError:
+            # Handle invalid input
+            print("Please enter valid numeric values for Az and El!")
+
+    def update_pos():
+        try:
+            app.az, app.el = app.rot.get_position().split()
+            app.tab_view.autoAZ.configure(text_color=colors.connected)
+        except Exception:
+            app.tab_view.autoAZ.configure(text_color=colors.failed)
+        app.tab_view.autoAZ.configure(text=f"Az: {app.az}°")
+        app.tab_view.autoEL.configure(text=f"El: {app.el}°")
+        app.after(1000, update_pos)
+        update_marker()
+
+    print(app.values.rothost)
+    print(app.values.rotport)
     app.clear_frame()
     app.canvas.get_tk_widget().grid(row=2, column=0)
-#     app.control_frame.grid(row=2, column=1, padx=10, sticky="W")
-#     app.azLabel.grid()
-#     app.azEntry.grid()
-#     app.elLabel.grid()
-#     app.elEntry.grid()
+    #     app.control_frame.grid(row=2, column=1, padx=10, sticky="W")
+    #     app.azLabel.grid()
+    #     app.azEntry.grid()
+    #     app.elLabel.grid()
+    #     app.elEntry.grid()
     app.updatemarkerButton.grid()
     app.tlmLabel.grid(row=4, column=0, padx=20)
     app.telemetryBox.grid(row=5, column=0, columnspan=4, padx=10)
 
     app.tab_view.grid(row=2, column=1, sticky="W")
+    update_pos()
