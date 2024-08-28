@@ -1,7 +1,7 @@
 {
     "grizu.ksy": {
         "source": "/home/diomig/Desktop/user-interface/Decoders/grizu.ksy",
-        "compiled": null
+        "compiled": "grizu.py"
     },
     "norbi.ksy": {
         "source": "/home/diomig/Desktop/user-interface/Decoders/norbi.ksy",
