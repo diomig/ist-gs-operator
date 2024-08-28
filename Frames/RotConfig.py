@@ -11,31 +11,31 @@ def rot_config_create(app):
 
     def update(data):
         # Clear the listbox
-        app.my_list.delete(0, "end")
+        app.rotmodelList.delete(0, "end")
 
         # Add modelopts to listbox
         for item in data:
-            app.my_list.insert("end", item)
+            app.rotmodelList.insert("end", item)
 
     # Update entry box with listbox clicked
     def fillout(e):
         # Delete whatever is in the entry box
-        app.my_entry.delete(0, "end")
+        app.rotmodelEntry.delete(0, "end")
 
         # Add clicked list item to entry box
-        selected = app.my_list.get("anchor")
-        app.my_entry.insert(0, "  ".join(selected.split()))
+        selected = app.rotmodelList.get("anchor")
+        app.rotmodelEntry.insert(0, "  ".join(selected.split()))
         if selected:
             print("Selected: ", selected)
             app.values.rotmodel = selected.split()[0]
             print("Rotator model: ", app.values.rotmodel)
-            app.modelselectLabel.grid(row=3, column=1, padx=30, sticky="E")
+            app.rotcheckIcon.grid(row=3, column=2, padx=40, sticky="E")
 
     # Create function to check entry vs listbox
     def check(e):
         # grab what was typed
-        typed = app.my_entry.get()
-        app.modelselectLabel.grid_forget()
+        typed = app.rotmodelEntry.get()
+        app.rotcheckIcon.grid_forget()
         if typed == "":
             data = modelopts
         else:
@@ -62,13 +62,13 @@ def rot_config_create(app):
     )
 
     # Create an entry box
-    app.my_entry = ctk.CTkEntry(
+    app.rotmodelEntry = ctk.CTkEntry(
         app.frame,
         font=fonts.entry,
         width=500,
     )
 
-    app.modelselectLabel = ctk.CTkLabel(
+    app.rotcheckIcon = ctk.CTkLabel(
         app.frame,
         text="✔️",
         text_color="green",
@@ -76,14 +76,14 @@ def rot_config_create(app):
     )
 
     # Create a listbox
-    app.my_list = tk.Listbox(
+    app.rotmodelList = tk.Listbox(
         app.frame,
         width=70,
         bg=colors.bg,
-        fg="#ffffff",
-        highlightcolor="#666666",
+        fg=colors.listbox_bg,
+        highlightcolor=colors.listbox_hl,
+        selectbackground=colors.listbox_sel,
         font=fonts.listbox,
-        # selectbackground="#aaaaaa",
     )
 
     modelopts = open("hamlib-rotators.txt", "r").read().splitlines()
@@ -91,10 +91,10 @@ def rot_config_create(app):
     update(modelopts)
 
     # Create a binding on the listbox onclick
-    app.my_list.bind("<<ListboxSelect>>", fillout)
+    app.rotmodelList.bind("<<ListboxSelect>>", fillout)
 
     # Create a binding on the entry box
-    app.my_entry.bind("<KeyRelease>", check)
+    app.rotmodelEntry.bind("<KeyRelease>", check)
 
     app.rothostLabel = ctk.CTkLabel(
         app.frame,
@@ -151,8 +151,8 @@ def rot_config_create(app):
         return 0
 
     index = model_index(modelopts, app.values.rotmodel)
-    app.my_list.selection_set(index)
-    app.my_list.yview_scroll(index - 3, "units")
+    app.rotmodelList.selection_set(index)
+    app.rotmodelList.yview_scroll(index - 3, "units")
 
     app.newpresetEntry = ctk.CTkEntry(
         app.frame,
@@ -216,12 +216,14 @@ def rot_config_create(app):
         app.rotbaudEntry.delete(0, 'end')
         app.rotbaudEntry.insert(0, this['sspeed'])
         index = model_index(modelopts, this['model'])
-        print(index)
-        app.my_list.selection_clear(0, 'end')
-        app.my_list.selection_set(index)
-        app.my_list.yview_scroll(index, "units")
-        app.my_entry.delete(0, 'end')
-        app.my_entry.insert(0, this['model'])
+#         print(index)
+#         app.rotmodelList.selection_clear(0, 'end')
+#         app.rotmodelList.selection_set(index)
+#         app.rotmodelList.yview_scroll(index, "units")
+        app.rotmodelEntry.delete(0, 'end')
+        app.rotmodelEntry.insert(0, modelopts[index].split()[-1])
+        check(None)
+        print(modelopts[index].split()[-1])
 
     app.presetOption = ctk.CTkOptionMenu(
         app.frame,
@@ -276,8 +278,8 @@ def rot_config(app):
     app.clear_frame()
     app.rotTitle.grid(row=0, column=0, columnspan=5, pady=(20, 40))
     app.rotmodelLabel.grid(row=2, column=0, padx=80, pady=(50, 5), sticky="w")
-    app.my_entry.grid(row=3, column=0, padx=40, columnspan=3)
-    app.my_list.grid(row=4, column=0, padx=40, pady=5, columnspan=3)
+    app.rotmodelEntry.grid(row=3, column=0, padx=40, columnspan=3)
+    app.rotmodelList.grid(row=4, column=0, padx=40, pady=5, columnspan=3)
     app.rothostLabel.grid(row=6, column=0, padx=50, pady=(40, 5), sticky="W")
     app.rothostEntry.grid(row=7, column=0, padx=(50, 40), sticky="W")
     app.colon.grid(row=7, column=0, padx=10, sticky="E")
