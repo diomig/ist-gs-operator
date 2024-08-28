@@ -19,4 +19,7 @@ class colors:
     disconnect = "#d9580d"
     disconnect_hover = "#913b09"
     bg = "#282828"
+    listbox_bg = '#ffffff'
+    listbox_hl = '#9fd0f5' # '#666666'
+    listbox_sel = '#9fd0f5'
     transparent = "#00000000"
