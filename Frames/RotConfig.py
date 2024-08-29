@@ -253,18 +253,25 @@ def rot_config_create(app):
     )
 
     def start_rot():
-        print(f"Model: {app.values.rotmodel}")
-        print(f"Host: {app.values.rothost}")
-        print(f"Port: {app.values.rotport}")
-        print(f"Device: {app.values.rotdevice}")
-        print(f"Serial Baud: {app.values.sspeed}")
-        app.values.rotselect = ""
-        mqttC.publish(Topics.rotmodel, app.values.rotmodel)
-        mqttC.publish(Topics.rothost, app.values.rothost)
-        mqttC.publish(Topics.rotport, app.values.rotport)
-        mqttC.publish(Topics.rotdevice, app.values.rotdevice)
-        mqttC.publish(Topics.rotsspeed, app.values.sspeed)
-        mqttC.publish(Topics.rotselect, app.values.rotselect)
+        preset = app.presetOption.get()
+        if preset == 'None':
+            print(f"Model: {app.values.rotmodel}")
+            print(f"Host: {app.values.rothost}")
+            print(f"Port: {app.values.rotport}")
+            print(f"Device: {app.values.rotdevice}")
+            print(f"Serial Baud: {app.values.sspeed}")
+            app.values.rotselect = ""
+            mqttC.publish(Topics.rotmodel, app.values.rotmodel)
+            mqttC.publish(Topics.rothost, app.values.rothost)
+            mqttC.publish(Topics.rotport, app.values.rotport)
+            mqttC.publish(Topics.rotdevice, app.values.rotdevice)
+            mqttC.publish(Topics.rotsspeed, app.values.sspeed)
+            mqttC.publish(Topics.rotselect, app.values.rotselect)
+        else:
+            print(presetopts)
+            this_preset = json.dumps(presetopts['presets'][preset])
+            mqttC.publish(Topics.rotselect, preset)
+            mqttC.publish(Topics.newpreset, this_preset)
 
     app.rotstartButton = ctk.CTkButton(
         app.frame,
