@@ -12,8 +12,12 @@ class Rotator:
         self.socket.close()
 
     def open_socket(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((self.host, self.port))
+        try:
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.connect((self.host, self.port))
+            self.connected = True
+        except Exception:
+            self.connected = False
 
     def get_position(self):
         self.socket.send("p\x0a".encode())
