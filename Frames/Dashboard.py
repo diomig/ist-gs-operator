@@ -1,8 +1,9 @@
 import customtkinter as ctk
 import matplotlib.backends.backend_tkagg as tkagg  # import FigureCanvasTkAgg
 import numpy as np
-from matplotlib.figure import Figure
 from colorama import Fore
+from matplotlib.figure import Figure
+
 from rotClient import Rotator
 from utils import colors, fonts
 
@@ -124,17 +125,18 @@ def dash_create(app):
     app.azLabel = ctk.CTkLabel(app.control_frame, text="Az [°]:")
     app.azEntry = ctk.CTkEntry(app.control_frame, width=100)
 
+    app.az = 0
+    app.el = 0
+
     def update_marker():
         try:
-            # Get the values from the entries
             mode = app.tab_view.get()
-            el = app.el if mode == "Auto" else float(app.elEntry.get())
+            el = float(app.elEntry.get()) if mode == "Manual" else app.el
             r = 90 - el
 
-            az = app.az if mode == "Auto" else float(app.azEntry.get())
+            az = float(app.azEntry.get()) if mode == "Manual" else app.az
             theta = np.radians(az)
 
-            # Update the marker position
             app.ax.lines.clear()
             app.ax.plot(theta, r, marker="o", color=colors.marker)
             app.canvas.draw()
@@ -150,12 +152,15 @@ def dash_create(app):
 
     app.tab_view = RotPanel(app.frame, top=app, width=300)
 
-    app.rot = Rotator("localhost", 4533)
+    app.connectionStatus = ctk.CTkLabel(
+        app.frame,
+        text="Connected to the daemon",
+    )
 
 
 def dash(app):
     def update_marker():
-        if app.tab_view.get() == 'Manual':
+        if app.tab_view.get() == "Manual":
             return
         try:
             # Get the values from the entries
@@ -175,15 +180,22 @@ def dash(app):
             print("Please enter valid numeric values for Az and El!")
 
     def update_pos():
+        if not app.rot.connected:
+            app.rot.open_socket()
         try:
             app.az, app.el = app.rot.get_position().split()
             app.tab_view.autoAZ.configure(text_color=colors.connected)
+            app.tab_view.autoEL.configure(text_color=colors.connected)
+            app.tab_view.autoAZ.configure(text=f"Az: {app.az}°")
+            app.tab_view.autoEL.configure(text=f"El: {app.el}°")
         except Exception:
             app.tab_view.autoAZ.configure(text_color=colors.failed)
-        app.tab_view.autoAZ.configure(text=f"Az: {app.az}°")
-        app.tab_view.autoEL.configure(text=f"El: {app.el}°")
+            app.tab_view.autoEL.configure(text_color=colors.failed)
+            app.rot.connected = False
         app.after(1000, update_pos)
         update_marker()
+
+    app.rot = Rotator("localhost", 4533)
 
     print(app.values.rothost)
     print(app.values.rotport)
