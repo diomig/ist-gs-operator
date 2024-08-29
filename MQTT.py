@@ -25,7 +25,8 @@ class Topics:
     rotsspeed = f"{globalName}rot/sspeed"
     rotmodel = f"{globalName}rot/model"
     rotselect = f"{globalName}rot/select"
-    newpreset = f'{globalName}rot/newpreset'
+    newpreset = f"{globalName}rot/newpreset"
+
 
 # Define the MQTT topics
 # pub_topics = ["radio/freq", "radio/bw", "radio/br", "radio/chksum", "msg/cmd"]
