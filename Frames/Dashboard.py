@@ -31,11 +31,11 @@ class RotPanel(ctk.CTkTabview):
             font=fonts.display,
         )
 
-        self.elLabel = ctk.CTkLabel(self.tab("Manual"), text="El [°]:")
+        self.elLabel = ctk.CTkLabel(self.tab("Manual"), text="El [°]:", font=fonts.label)
         self.elEntry = ctk.CTkEntry(self.tab("Manual"), width=100)
 
         # Entry for theta
-        self.azLabel = ctk.CTkLabel(self.tab("Manual"), text="Az [°]:")
+        self.azLabel = ctk.CTkLabel(self.tab("Manual"), text="Az [°]:", font=fonts.label)
         self.azEntry = ctk.CTkEntry(self.tab("Manual"), width=100)
 
         def set_pos():
@@ -59,13 +59,13 @@ class RotPanel(ctk.CTkTabview):
             self.tab("Manual"), text="Set Position", command=set_pos
         )
 
-        self.autoAZ.grid(row=0, column=0, padx=20, pady=10)
+        self.autoAZ.grid()
         self.autoEL.grid()
-        self.azLabel.grid()
-        self.azEntry.grid()
-        self.elLabel.grid()
-        self.elEntry.grid()
-        self.setposButton.grid()
+        self.azLabel.grid(row=0, column=0, padx=10, pady=20)
+        self.azEntry.grid(row=0, column=1, padx=10, pady=20)
+        self.elLabel.grid(row=1, column=0, padx=10, pady=20)
+        self.elEntry.grid(row=1, column=1, padx=10, pady=20)
+        self.setposButton.grid(row=2, column=0, columnspan=2, padx=30, pady=20)
 
 
 def dash_create(app):
