@@ -1,5 +1,5 @@
 class fonts:
-    header = ("SF Pro Display", 40)
+    header = ("SF Pro Display", 40, "bold")
     label = ("Roboto", 20)
     units = ("Roboto", 16)
     entry = ("calibri", 14)
@@ -7,7 +7,8 @@ class fonts:
     indicator = ("Roboto", 18, "bold")
     listbox = "TkFixedFont"
     icon = ("Roboto", 26)
-    display = ('Monaco', 30, 'bold')
+    display = ("Monaco", 30, "bold")
+
 
 class colors:
     connected = "#5f9661"
@@ -23,4 +24,4 @@ class colors:
     listbox_hl = "#9fd0f5"  # '#666666'
     listbox_sel = "#9fd0f5"
     transparent = "#00000000"
-    marker = '#348ceb'
+    marker = "#348ceb"
