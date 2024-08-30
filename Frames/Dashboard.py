@@ -17,7 +17,7 @@ class RotPanel(ctk.CTkTabview):
         self.add("Manual")
 
         self.azimuth = 0
-        self.elevation = 0
+        self.elevation = 90
 
         # add widgets on tabs
         self.autoAZ = ctk.CTkLabel(
@@ -31,11 +31,19 @@ class RotPanel(ctk.CTkTabview):
             font=fonts.display,
         )
 
-        self.elLabel = ctk.CTkLabel(self.tab("Manual"), text="El [°]:", font=fonts.label)
+        self.elLabel = ctk.CTkLabel(
+            self.tab("Manual"),
+            text="El [°]:",
+            font=fonts.label,
+        )
         self.elEntry = ctk.CTkEntry(self.tab("Manual"), width=100)
 
         # Entry for theta
-        self.azLabel = ctk.CTkLabel(self.tab("Manual"), text="Az [°]:", font=fonts.label)
+        self.azLabel = ctk.CTkLabel(
+            self.tab("Manual"),
+            text="Az [°]:",
+            font=fonts.label,
+        )
         self.azEntry = ctk.CTkEntry(self.tab("Manual"), width=100)
 
         def set_pos():
@@ -126,7 +134,7 @@ def dash_create(app):
     app.azEntry = ctk.CTkEntry(app.control_frame, width=100)
 
     app.az = 0
-    app.el = 0
+    app.el = 90
 
     def update_marker():
         try:
