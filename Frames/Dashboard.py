@@ -203,7 +203,7 @@ def dash(app):
         app.after(1000, update_pos)
         update_marker()
 
-    app.rot = Rotator("localhost", 4533)
+    app.rot = Rotator(app.values.rothost, app.values.rotport)
 
     print(app.values.rothost)
     print(app.values.rotport)
