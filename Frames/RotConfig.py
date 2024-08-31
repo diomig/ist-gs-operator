@@ -255,6 +255,11 @@ def rot_config_create(app):
     def start_rot():
         preset = app.presetOption.get()
         if preset == 'None':
+            app.values.rotmodel = app.rotmodelEntry.get()
+            app.values.rothost = app.rothostEntry.get()
+            app.values.rotport = app.rotportEntry.get()
+            app.values.rotdevice = app.rotdevEntry.get()
+            app.values.sspeed = app.rotbaudEntry.get()
             print(f"Model: {app.values.rotmodel}")
             print(f"Host: {app.values.rothost}")
             print(f"Port: {app.values.rotport}")
