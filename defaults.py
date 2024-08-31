@@ -23,7 +23,7 @@ class Default:
     pw = ''
 
     rothost = 'localhost'
-    rotport = '4535'
+    rotport = '4533'
     rotmodel = '1901'
     rotdevice = '/dev/ttyUSB0'
     sspeed = 115200
