@@ -293,6 +293,8 @@ def rot_config(app):
     app.rotmodelEntry.grid(row=3, column=0, padx=40, columnspan=3)
     app.rotmodelList.grid(row=4, column=0, padx=40, pady=5, columnspan=3)
     app.rothostLabel.grid(row=6, column=0, padx=50, pady=(40, 5), sticky="W")
+    app.rothostEntry.delete(0, 'end')
+    app.rothostEntry.insert(0, app.values.rothost)
     app.rothostEntry.grid(row=7, column=0, padx=(50, 40), sticky="W")
     app.colon.grid(row=7, column=0, padx=10, sticky="E")
     app.rotportLabel.grid(row=6, column=1, padx=10, pady=(40, 5), sticky="W")

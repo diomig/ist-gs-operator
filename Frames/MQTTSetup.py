@@ -71,6 +71,7 @@ def mqtt_setup_create(app):
             app.connected = True
             app.connectButton.grid_forget()
             app.disconnectButton.grid(row=8, column=0, columnspan=4, pady=100)
+            app.values.rothost = app.values.host
 
     app.connectButton = ctk.CTkButton(
         app.frame, text="Connect", font=fonts.button, command=connect_event
