@@ -4,6 +4,7 @@ import numpy as np
 from colorama import Fore
 from matplotlib.figure import Figure
 
+from Frames.RadioConfig import to_float, to_int
 from rotClient import Rotator
 from utils import colors, fonts
 
@@ -48,15 +49,24 @@ class RotPanel(ctk.CTkTabview):
 
         def set_pos():
             try:
+                az = to_float(self.azEntry.get())
+                el = to_float(self.elEntry.get())
+                if az < 0 or az > 360:
+                    return
+                if el < 0 or el > 90:
+                    return
+
                 # Get the values from the entries
-                r = 90 - float(self.elEntry.get())
+                r = 90 - el
                 # Convert degrees to radians
-                theta = np.radians(float(self.azEntry.get()))
+                theta = np.radians(az)
 
                 # Update the marker position
                 top.ax.lines.clear()
                 top.ax.plot(theta, r, marker="o", color=colors.marker)
                 top.canvas.draw()
+
+                print(top.rot.set_position(az, el))
 
             except ValueError:
                 # Handle invalid input

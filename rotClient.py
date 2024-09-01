@@ -22,3 +22,7 @@ class Rotator:
     def get_position(self):
         self.socket.send("p\x0a".encode())
         return self.socket.recv(20).decode()
+
+    def set_position(self, az, el):
+        self.socket.send(f"P {az} {el}\x0a".encode())
+        return self.socket.recv(20).decode()
