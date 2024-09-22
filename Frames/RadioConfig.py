@@ -129,7 +129,7 @@ def radio_config_create(app):
     # PREAMBLE LENGTH ===================================
     app.plenLabel = ctk.CTkLabel(
         app.frame,
-        text="Preamble Length",
+        text="Preamble\nLength",
         font=fonts.label,
     )
 
@@ -174,7 +174,7 @@ def radio_config_create(app):
 
     app.sfLabel = ctk.CTkLabel(
         app.frame,
-        text="Spreading Factor",
+        text="Spreading\nFactor",
         font=fonts.label,
     )
     app.sfSegmented = ctk.CTkSegmentedButton(
