@@ -33,7 +33,7 @@ def decoders(app):
         # Add clicked list item to entry box
         selected = app.decList.get("anchor").split()[0]
         app.decEntry.insert(0, "  ".join(selected.split()))
-        app.decoderselectLabel.grid(row=3, column=1, padx=30, sticky="E")
+        app.decoderselectLabel.grid(row=3, column=1, padx=50, sticky='W')
         print("Selected: ", selected, decoderopts[selected])
         if selected:
             app.decoder = selected
@@ -83,7 +83,7 @@ def decoders(app):
         app.frame,
         text="✔️",
         text_color="green",
-        font=fonts.label,
+        font=fonts.icon,
     )
 
     # Create a listbox
@@ -192,10 +192,10 @@ def decoders(app):
     )
 
     app.decTitle.grid(row=0, column=0, columnspan=4, padx=30, pady=(20, 40))
-    app.decLabel.grid(row=2, column=0)
-    app.decoderselectLabel.grid(row=2, column=1)
+    app.decLabel.grid(row=2, column=0, padx=10, sticky='W')
+    # app.decoderselectLabel.grid(row=3, column=1)
     app.decEntry.grid(row=3, column=0, padx=10)
-    app.addfileButton.grid(row=3, column=1, padx=10, sticky="W")
+    app.addfileButton.grid(row=3, column=1, padx=0, sticky="W")
     app.decList.grid(row=4, column=0, padx=(30, 0), sticky="W")
     app.compileButton.grid(row=4, column=1, padx=20, pady=30, sticky="W")
-    app.setdecButton.grid(row=5)
+    app.setdecButton.grid(row=5, pady=20)
