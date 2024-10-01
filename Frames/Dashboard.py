@@ -90,7 +90,7 @@ def dash_create(app):
     """Dashboard widget"""
     app.tlmLabel = ctk.CTkLabel(
         app.frame,
-        text="Raw Telemetry",
+        text="Raw Data",
         font=fonts.label,
     )
 
