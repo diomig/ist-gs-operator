@@ -193,13 +193,13 @@ a.bind("<Control-w>", just_quit)
 
 
 def update_telemetryBox(app, msg):
-    new = f"\n{msg.topic}: {msg.payload.decode()}"
+    new = f"\n{msg.topic}: {msg.payload}"
     app.telemetry += new
-    app.telemetryBox.insert("end", app.telemetry)
+    app.telemetryBox.insert("end", new)
 
 
 def on_message(client, userdata, msg):
-    telemetry = msg.payload.decode()
+    telemetry = msg.payload
     print(f"Received message on {msg.topic}: {telemetry}")
     update_telemetryBox(a, msg)
 
