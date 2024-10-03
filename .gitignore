@@ -5,6 +5,7 @@ __pycache__/
 # this is just to test random stuff
 test.py
 test2.py
+rxpacket.py
 
 # don't track the decoders
 Decoders/*
