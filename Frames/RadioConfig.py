@@ -220,7 +220,7 @@ def radio_config_create(app):
     )
 
     def lna_slider_event(value):
-        app.lnaValue.configure(text=f"Lvl {int(value)}")
+        app.lnaValue.configure(text=f"G{int(value)}")
         if value != app.values.lna_gain:
             app.values.lna_gain = value
             mqttC.publish(Topics.lnag, app.values.lna_gain)
@@ -234,7 +234,7 @@ def radio_config_create(app):
     )
     app.lnaValue = ctk.CTkLabel(
         app.frame,
-        text=f"Lvl {app.values.lna_gain}",
+        text=f"G{app.values.lna_gain}",
         font=fonts.units,
         text_color=colors.units,
     )
