@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt_client
+import ssl
 
 globalName = "myGS/"
 
@@ -62,6 +63,18 @@ def on_connect(client, userdata, flags, rc):
 
 # Initialize the MQTT client
 mqttC = mqtt_client.Client()
+
+# # TEST: make this configurable
+# usingTLS = True
+# if usingTLS:
+#     mqttC.tls_set(
+#         ca_certs='tls/mosquitto.org.crt',
+#         certfile="tls/client.crt",
+#         keyfile="tls/client.key",
+#         tls_version=ssl.PROTOCOL_TLSv1_2,
+#     )
+#     mqttC.tls_insecure_set(False)
+
 
 # Assign the callback functions
 mqttC.on_connect = on_connect
