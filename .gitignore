@@ -10,3 +10,6 @@ rxpacket.py
 # don't track the decoders
 Decoders/*
 decoders.json
+
+# don't track TLS keys and certificates
+tls/*
