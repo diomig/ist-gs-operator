@@ -8,6 +8,7 @@ class fonts:
     listbox = "TkFixedFont"
     icon = ("Roboto", 26)
     display = ("Monaco", 30, "bold")
+    bullet = '\u2022'
 
 
 class colors:
