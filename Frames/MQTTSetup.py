@@ -31,7 +31,7 @@ def mqtt_setup_create(app):
 
     app.pwLabel = ctk.CTkLabel(app.frame, text="Password", font=fonts.label)
     app.pwEntry = ctk.CTkEntry(
-        app.frame, placeholder_text="Password", font=fonts.entry, width=300
+        app.frame, placeholder_text="Password", show=fonts.bullet, font=fonts.entry, width=300
     )
 
     # Connect
