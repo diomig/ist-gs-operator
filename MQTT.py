@@ -43,6 +43,12 @@ sub_topics = [
 # broker_port = 1883
 
 
+class TLS:
+    cafile = None
+    cert = None
+    key = None
+
+tlsC = TLS()
 # Define the on_connect callback function
 
 
@@ -64,7 +70,7 @@ def on_connect(client, userdata, flags, rc):
 # Initialize the MQTT client
 mqttC = mqtt_client.Client()
 
-# # TEST: make this configurable
+# TEST: make this configurable
 # usingTLS = True
 # if usingTLS:
 #     mqttC.tls_set(
