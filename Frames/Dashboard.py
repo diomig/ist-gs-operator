@@ -98,14 +98,14 @@ class MsgPanel(ctk.CTkTabview):
 
         self.raw_box = ctk.CTkTextbox(
             self.tab(_raw),
-            width=500,
-            height=300,
+            width=590,
+            height=390,
         )
 
         self.decoded_box = ctk.CTkTextbox(
             self.tab(_decoded),
-            width=500,
-            height=300,
+            width=600,
+            height=400,
         )
 
         self.raw_box.grid()
@@ -182,7 +182,7 @@ def dash_create(app):
     )
 
     app.rot_panel = RotPanel(app.frame, top=app, width=300)
-    app.msg_panel = MsgPanel(app.frame, top=app)
+    app.msg_panel = MsgPanel(app.frame, top=app, width=600, height=400)
     app.connectionStatus = ctk.CTkLabel(
         app.frame,
         text="Connected to the daemon",
@@ -241,4 +241,4 @@ def dash(app):
 
     app.rot_panel.grid(row=2, column=1, sticky="W")
     update_pos()
-    app.msg_panel.grid()
+    app.msg_panel.grid(row=4, column=0, columnspan=4)
