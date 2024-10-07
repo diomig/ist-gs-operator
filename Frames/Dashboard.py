@@ -86,21 +86,34 @@ class RotPanel(ctk.CTkTabview):
         self.setposButton.grid(row=2, column=0, columnspan=2, padx=30, pady=20)
 
 
+class MsgPanel(ctk.CTkTabview):
+    def __init__(self, master, top, **kwargs):
+        super().__init__(master, **kwargs)
+
+        _raw = "Raw"
+        _decoded = "Decoded"
+        # create tabs
+        self.add(_raw)
+        self.add(_decoded)
+
+        self.raw_box = ctk.CTkTextbox(
+            self.tab(_raw),
+            width=500,
+            height=300,
+        )
+
+        self.decoded_box = ctk.CTkTextbox(
+            self.tab(_decoded),
+            width=500,
+            height=300,
+        )
+
+        self.raw_box.grid()
+        self.decoded_box.grid()
+
+
 def dash_create(app):
     """Dashboard widget"""
-    app.tlmLabel = ctk.CTkLabel(
-        app.frame,
-        text="Raw Data",
-        font=fonts.label,
-    )
-
-    app.telemetryBox = ctk.CTkTextbox(
-        app.frame,
-        width=500,
-        height=300,
-    )
-    #     app.telemetryBox.insert('0.0', 'new telemetry message')
-    #     app.telemetryBox.configure(state='disabled')
 
     fig = Figure(figsize=(4, 4), dpi=100)
     fig.patch.set_facecolor(colors.transparent)  # colors.bg)
@@ -148,7 +161,7 @@ def dash_create(app):
 
     def update_marker():
         try:
-            mode = app.tab_view.get()
+            mode = app.rot_panel.get()
             el = float(app.elEntry.get()) if mode == "Manual" else app.el
             r = 90 - el
 
@@ -168,8 +181,8 @@ def dash_create(app):
         app.control_frame, text="Set Position", command=update_marker
     )
 
-    app.tab_view = RotPanel(app.frame, top=app, width=300)
-
+    app.rot_panel = RotPanel(app.frame, top=app, width=300)
+    app.msg_panel = MsgPanel(app.frame, top=app)
     app.connectionStatus = ctk.CTkLabel(
         app.frame,
         text="Connected to the daemon",
@@ -178,7 +191,7 @@ def dash_create(app):
 
 def dash(app):
     def update_marker():
-        if app.tab_view.get() == "Manual":
+        if app.rot_panel.get() == "Manual":
             return
         try:
             # Get the values from the entries
@@ -202,13 +215,13 @@ def dash(app):
             app.rot.open_socket()
         try:
             app.az, app.el = app.rot.get_position().split()
-            app.tab_view.autoAZ.configure(text_color=colors.connected)
-            app.tab_view.autoEL.configure(text_color=colors.connected)
-            app.tab_view.autoAZ.configure(text=f"Az: {app.az}°")
-            app.tab_view.autoEL.configure(text=f"El: {app.el}°")
+            app.rot_panel.autoAZ.configure(text_color=colors.connected)
+            app.rot_panel.autoEL.configure(text_color=colors.connected)
+            app.rot_panel.autoAZ.configure(text=f"Az: {app.az}°")
+            app.rot_panel.autoEL.configure(text=f"El: {app.el}°")
         except Exception:
-            app.tab_view.autoAZ.configure(text_color=colors.failed)
-            app.tab_view.autoEL.configure(text_color=colors.failed)
+            app.rot_panel.autoAZ.configure(text_color=colors.failed)
+            app.rot_panel.autoEL.configure(text_color=colors.failed)
             app.rot.connected = False
         app.after(1000, update_pos)
         update_marker()
@@ -225,8 +238,7 @@ def dash(app):
     #     app.elLabel.grid()
     #     app.elEntry.grid()
     app.updatemarkerButton.grid()
-    app.tlmLabel.grid(row=4, column=0, padx=20)
-    app.telemetryBox.grid(row=5, column=0, columnspan=4, padx=10)
 
-    app.tab_view.grid(row=2, column=1, sticky="W")
+    app.rot_panel.grid(row=2, column=1, sticky="W")
     update_pos()
+    app.msg_panel.grid()

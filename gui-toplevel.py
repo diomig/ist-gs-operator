@@ -1,4 +1,5 @@
 import tkinter
+import yaml
 
 import customtkinter as ctk
 from PIL import Image, ImageTk
@@ -192,10 +193,44 @@ def just_quit(e):
 a.bind("<Control-w>", just_quit)
 
 
+def parse_msg(pkt, indent=4):
+
+    from Decoders import prometheus as decoder
+
+    msg = decoder.Prometheus.from_bytes(pkt)
+
+    def to_dict(item):
+
+        match item:
+            case dict():
+                data = {}
+                for k, v in item.items():
+                    data[k] = to_dict(v)
+                return data
+            case list() | tuple():
+                return [to_dict(x) for x in item]
+            case object(__dict__=_):
+                data = {}
+                for k, v in item.__dict__.items():
+                    if not k.startswith("_"):
+                        data[k] = to_dict(v)
+                return data
+            case _:
+                if isinstance(item, bytes):
+                    return item.hex()
+                return item
+
+    msg_dict = to_dict(msg)
+    out = yaml.dump(msg_dict, indent)
+    return out
+
+
 def update_telemetryBox(app, msg):
-    new = f"\n{msg.topic}: {msg.payload}"
+    packet = msg.payload
+    new = f"\n{msg.topic}: {packet}"
     app.telemetry += new
-    app.telemetryBox.insert("end", new)
+    app.msg_panel.raw_box.insert("end", new)
+    app.msg_panel.decoded_box.insert("end", parse_msg(packet))
 
 
 def on_message(client, userdata, msg):
