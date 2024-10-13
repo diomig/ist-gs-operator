@@ -1,5 +1,6 @@
 import tkinter
 import yaml
+import json
 
 import customtkinter as ctk
 from PIL import Image, ImageTk
@@ -197,40 +198,44 @@ def parse_msg(pkt, indent=4):
 
     from Decoders import prometheus as decoder
 
-    msg = decoder.Prometheus.from_bytes(pkt)
+    try:
+        msg = decoder.Prometheus.from_bytes(pkt)
 
-    def to_dict(item):
+        def to_dict(item):
 
-        match item:
-            case dict():
-                data = {}
-                for k, v in item.items():
-                    data[k] = to_dict(v)
-                return data
-            case list() | tuple():
-                return [to_dict(x) for x in item]
-            case object(__dict__=_):
-                data = {}
-                for k, v in item.__dict__.items():
-                    if not k.startswith("_"):
+            match item:
+                case dict():
+                    data = {}
+                    for k, v in item.items():
                         data[k] = to_dict(v)
-                return data
-            case _:
-                if isinstance(item, bytes):
-                    return item.hex()
-                return item
+                    return data
+                case list() | tuple():
+                    return [to_dict(x) for x in item]
+                case object(__dict__=_):
+                    data = {}
+                    for k, v in item.__dict__.items():
+                        if not k.startswith("_"):
+                            data[k] = to_dict(v)
+                    return data
+                case _:
+                    if isinstance(item, bytes):
+                        return item.hex()
+                    return item
 
-    msg_dict = to_dict(msg)
-    out = yaml.dump(msg_dict, indent)
-    return out
+        msg_dict = to_dict(msg)
+        out = json.dumps(msg_dict, indent=indent)
+        return out
+    except Exception:
+        return 'Failed to Decode: Wrong Packet Format'
 
 
 def update_telemetryBox(app, msg):
     packet = msg.payload
-    new = f"\n{msg.topic}: {packet}"
+    new = f"\n{msg.topic}:\n{packet}\n\n\n"
     app.telemetry += new
     app.msg_panel.raw_box.insert("end", new)
-    app.msg_panel.decoded_box.insert("end", parse_msg(packet))
+    app.msg_panel.decoded_box.insert("end", parse_msg(packet) + '\n\n\n')
+    print(parse_msg(packet))
 
 
 def on_message(client, userdata, msg):
