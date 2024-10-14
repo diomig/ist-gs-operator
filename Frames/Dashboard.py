@@ -7,6 +7,7 @@ from matplotlib.figure import Figure
 from Frames.RadioConfig import to_float, to_int
 from rotClient import Rotator
 from utils import colors, fonts
+from MQTT import mqttC, Topics
 
 
 class RotPanel(ctk.CTkTabview):
@@ -188,6 +189,28 @@ def dash_create(app):
         text="Connected to the daemon",
     )
 
+    app.txcmdEntry = ctk.CTkEntry(
+        app.frame,
+        width=580,
+        placeholder_text="Send a Command",
+    )
+
+    def send_cmd():
+        cmd = app.txcmdEntry.get()
+        print(f"Command to Satellite: {cmd}")
+        app.txcmdEntry.delete(0, 'end')
+        mqttC.publish(Topics.cmd, cmd)
+        app.msg_panel.raw_box.insert('end', 'operator$ '+cmd+'\n')
+        app.msg_panel.decoded_box.insert('end', 'operator$ '+cmd+'\n')
+
+    app.txcmdBtn = ctk.CTkButton(
+        app.frame,
+        width=20,
+        text="Send",
+        command=send_cmd,
+        font=fonts.button,
+    )
+
 
 def dash(app):
     def update_marker():
@@ -242,3 +265,5 @@ def dash(app):
     app.rot_panel.grid(row=2, column=1, sticky="W")
     update_pos()
     app.msg_panel.grid(row=4, column=0, columnspan=4)
+    app.txcmdEntry.grid(row=5, column=0, columnspan=4)
+    app.txcmdBtn.grid(row=5, column=0, columnspan=3, sticky="E")
