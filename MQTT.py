@@ -37,6 +37,7 @@ sub_topics = [
     f"{globalName}msg/telemetry",
     f"{globalName}msg/payload",
     f"{globalName}msg/reply",
+    f"{globalName}msg/rssi",
 ]
 
 # Define the MQTT broker address and port
