@@ -1,6 +1,7 @@
 import tkinter
 import yaml
 import json
+from datetime import datetime
 
 import customtkinter as ctk
 from PIL import Image, ImageTk
@@ -226,22 +227,32 @@ def parse_msg(pkt, indent=4):
         out = json.dumps(msg_dict, indent=indent)
         return out
     except Exception:
+        print(Exception)
         return 'Failed to Decode: Wrong Packet Format'
 
 
 def update_telemetryBox(app, msg):
     packet = msg.payload
-    new = f"\n{msg.topic}:\n{packet}\n\n\n"
+    format = '%Y-%m-%d %H:%M:%S'
+    timestamp = f"\n\t\t\t==={datetime.now().strftime(format)}===\n"
+    new = f"{timestamp}{msg.topic}:\n{packet}\n\n\n"
     app.telemetry += new
     app.msg_panel.raw_box.insert("end", new)
-    app.msg_panel.decoded_box.insert("end", parse_msg(packet) + '\n\n\n')
+    app.msg_panel.decoded_box.insert("end", f"{timestamp}{parse_msg(packet)}\n\n\n")
     print(parse_msg(packet))
+    print(packet[4])
+    print(len(packet))
 
 
 def on_message(client, userdata, msg):
-    telemetry = msg.payload
-    print(f"Received message on {msg.topic}: {telemetry}")
-    update_telemetryBox(a, msg)
+    if msg.topic.endswith('rssi'):
+        rssi = round(float(msg.payload.decode()), 2)
+        print(f'RSSI: {rssi}')
+        a.rssiLabel.configure(text=f'Packet RSSI: {rssi} dBm')
+    else:
+        message = msg.payload
+        print(f"Received message on {msg.topic}: {message}")
+        update_telemetryBox(a, msg)
 
 
 mqttC.on_message = on_message
