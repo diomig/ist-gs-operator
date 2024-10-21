@@ -48,7 +48,7 @@ class Prometheus(KaitaiStruct):
 
         def _read(self):
             self.total = self._io.read_u1()
-            self.segment = self._io.read_bytes(250)
+            self.segment = self._io.read_bytes(249)
 
 
     class Header(KaitaiStruct):
