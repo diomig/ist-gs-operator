@@ -5,9 +5,9 @@ from colorama import Fore
 from matplotlib.figure import Figure
 
 from Frames.RadioConfig import to_float, to_int
+from MQTT import Topics, mqttC
 from rotClient import Rotator
 from utils import colors, fonts
-from MQTT import mqttC, Topics
 
 
 class RotPanel(ctk.CTkTabview):
@@ -145,6 +145,12 @@ def dash_create(app):
     app.canvas.get_tk_widget().configure(bg=colors.bg)
     app.canvas.draw()
 
+    app.rssiLabel = ctk.CTkLabel(
+        app.frame,
+        text="Packet RSSI: -- dBm",
+        font=fonts.label,
+    )
+
     # ++++++++++++++++++++++++ JUST FOR TESTING ++++++++++++++++++++++++++++++
     # Frame to hold the controls
     app.control_frame = ctk.CTkFrame(app.frame)
@@ -198,10 +204,10 @@ def dash_create(app):
     def send_cmd():
         cmd = app.txcmdEntry.get()
         print(f"Command to Satellite: {cmd}")
-        app.txcmdEntry.delete(0, 'end')
+        app.txcmdEntry.delete(0, "end")
         mqttC.publish(Topics.cmd, cmd)
-        app.msg_panel.raw_box.insert('end', 'operator$ '+cmd+'\n')
-        app.msg_panel.decoded_box.insert('end', 'operator$ '+cmd+'\n')
+        app.msg_panel.raw_box.insert("end", "operator$ " + cmd + "\n")
+        app.msg_panel.decoded_box.insert("end", "operator$ " + cmd + "\n")
 
     app.txcmdBtn = ctk.CTkButton(
         app.frame,
@@ -267,3 +273,4 @@ def dash(app):
     app.msg_panel.grid(row=4, column=0, columnspan=4)
     app.txcmdEntry.grid(row=5, column=0, columnspan=4)
     app.txcmdBtn.grid(row=5, column=0, columnspan=3, sticky="E")
+    app.rssiLabel.grid(row=6, column=0, sticky='W')
