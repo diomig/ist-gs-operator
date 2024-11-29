@@ -77,7 +77,7 @@ def mqtt_setup_create(app):
     def open_cafile():
         file = tk.filedialog.askopenfile(
             mode="r",
-            initialdir=expanduser("~"),
+            initialdir=expanduser("~/Downloads"),
             title="Select a file",
             filetypes=[("Certificate Files", "*.crt"), ("all files", "*.*")],
         )
@@ -88,7 +88,7 @@ def mqtt_setup_create(app):
     def open_certfile():
         file = tk.filedialog.askopenfile(
             mode="r",
-            initialdir=expanduser("~"),
+            initialdir=expanduser("~/Downloads"),
             title="Select a file",
             filetypes=[("Certificate Files", "*.crt"), ("all files", "*.*")],
         )
@@ -99,7 +99,7 @@ def mqtt_setup_create(app):
     def open_keyfile():
         file = tk.filedialog.askopenfile(
             mode="r",
-            initialdir=expanduser("~"),
+            initialdir=expanduser("~/Downloads"),
             title="Select a file",
             filetypes=[("Key Files", "*.key"), ("all files", "*.*")],
         )
