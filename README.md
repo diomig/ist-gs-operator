@@ -1,5 +1,4 @@
-
-![image](docs/mqtt-demo.gif)
+# GUI Pages
 
 ### MQTT Setup
 <img title="MQTT Setup" src="docs/mqtt-demo.gif" width="400"/>
