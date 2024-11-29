@@ -1,5 +1,5 @@
 
 ![image](docs/mqtt-demo.gif)
 
-<img title="TLM03e" alt="TLM03e prototype" src="docs/gui-mqtt.png" width="800"/>
+<img title="Radio Config" src="docs/gui-mqtt.png" width="400"/>
 
